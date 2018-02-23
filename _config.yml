@@ -25,10 +25,9 @@ twitter_username: jekyllrb
 github_username:  jekyll
 
 # Build settings
-markdown: redcarpet
+markdown: kramdown
 theme: minima
-redcarpet:
-    extensions: [ "hard_wrap","autolink", "tables", "strikethrough", "superscript", "with_toc_data", "highlight", "prettify","no_intra_emphasis"]
+
 plugins:
   - jekyll-feed
 

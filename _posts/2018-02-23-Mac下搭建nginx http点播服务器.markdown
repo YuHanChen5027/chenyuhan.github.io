@@ -1,4 +1,10 @@
-##第一步 下载nginx和nginx_mod_h264_streaming-2.2.7
+---
+layout: post
+title:  "Mac下搭建nginx http点播服务器"
+date:   2018-02-23 11:18:42 +0800
+categories: article
+---
+## 第一步 下载nginx和nginx_mod_h264_streaming-2.2.7
 nginx下载地址：http://nginx.org/en/download.html
 
 nginx_mod_h264_streaming-2.2.7 下载地址:
@@ -8,7 +14,7 @@ http://h264.code-shop.com/download/nginx_mod_h264_streaming-2.2.7.tar.gz
 
 ![](http://upload-images.jianshu.io/upload_images/4273129-49feda242d8eafc2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-##第二步 配置nginx
+## 第二步 配置nginx
 进入文件夹nginx文件夹内，执行配置命令
 ```
 cd nginx-1.13.5
@@ -16,8 +22,8 @@ cd nginx-1.13.5
 ```
 配置命令中 我们引入了第们刚才下载的三方模块nginx_mod_h264_streaming-2.2.7，以及nginx自带的mp4，flv模块
 
-##第三步 编译安装nginx
-###编译make
+## 第三步 编译安装nginx
+### 编译make
 ```
 make
 ```
@@ -29,7 +35,7 @@ make
 ![](http://upload-images.jianshu.io/upload_images/4273129-df482fc56491eab1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 保存后再次make
 
-####错误2:
+#### 错误2:
 
 ![错误2](http://upload-images.jianshu.io/upload_images/4273129-e21be49c01aedac2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
@@ -41,7 +47,7 @@ make
 保存后再次make
 之后如果还有这种类型的错，采用同样的方基本都能解决了
 
-###安装install
+### 安装install
 ```
 make install
 ```
@@ -54,7 +60,7 @@ sudo make install
 ![](http://upload-images.jianshu.io/upload_images/4273129-3dd3b4e3f7333959.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 我们可以看到安装目录是 “usr/local/nginx”
 
-###第四步 配置nginx.conf
+### 第四步 配置nginx.conf
 nginx.conf文件在nginx目录下的conf文件夹下(即“usr/local/nginx/conf”)，
 我们需要修改nginx.conf（直接修改需要权限，同样通过sudo命令开启vi编辑器进行修改）
 ```
@@ -85,7 +91,7 @@ root movie;
 flv;
 }
 ```
-###第五步 启动nginx
+### 第五步 启动nginx
 我们设定的视频读取路径是 "usr/local/nginx/movie"，将1.mp4视频文件放入该文件夹，启动nginx(nginx启动文件放在nginx下的sbin文件夹内)
 ```
 cd /
@@ -100,7 +106,7 @@ sudo ./nginx
 
 ![](http://upload-images.jianshu.io/upload_images/4273129-888380bf0a3563f3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-###nginx 启动，关闭，重启命令
+### nginx 启动，关闭，重启命令
 启动：./nginx
 关闭：./nginx -s stop （快速停止nginx）
 &emsp;&emsp;&emsp;./nginx -s quit     (完整有序的停止nginx)
