@@ -45,7 +45,6 @@ make
 
 ”nginx_mod_h264_streaming-2.2.7/src/ “找到“mp4_io.c”文件并将aac_channels的注释或者删除
 ![](http://upload-images.jianshu.io/upload_images/4273129-213c4db80df76ae9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
-
 保存后再次make
 之后如果还有这种类型的错，采用同样的方基本都能解决了
 
