@@ -28,7 +28,7 @@ github_username:  jekyll
 markdown: redcarpet
 theme: minima
 redcarpet:
-extensions: [ "hard_wrap","autolink", "tables", "strikethrough", "superscript", "with_toc_data", "highlight", "prettify","no_intra_emphasis"]
+    extensions: [ "hard_wrap","autolink", "tables", "strikethrough", "superscript", "with_toc_data", "highlight", "prettify","no_intra_emphasis"]
 plugins:
   - jekyll-feed
 
