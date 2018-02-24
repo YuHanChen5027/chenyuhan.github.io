@@ -25,6 +25,7 @@ cd ijkplayer-android
 git checkout -B latest k0.8.4
 ./init-android.sh
 ```
+
 ## 第三步 修改编译ffmpeg用的脚本文件
 - 删除默认的脚本文件，复制module-default.sh脚本文件，将复制副本更改为默认脚本文件名module.sh
 ```
@@ -33,7 +34,9 @@ rm module.sh
 ln -s module-default.sh module.sh
 cd ..
 ```
+
 ## 第四步 编译源码
+
 ```
 cd android/contrib
 ./compile-ffmpeg.sh clean
@@ -42,26 +45,27 @@ cd android/contrib
 cd ..
 ./compile-ijk.sh all
 ```
-##### 若执行编译失败，提示
+
+#####  若执行编译失败，提示
+
 ```
 LOCAL_SRC_FILES points to a missing file
 ```
+
 尝试更换ndk版本为r14
 
-##### 若执行编译失败，提示
+#####  若执行编译失败，提示
+
 ```
 Android NDK: android-9 is unsupported. Using minimum supported version android-14。
 ```
+
 尝试去对应错误文件夹（如android/ijkplayer/ijkplayer-armv5/src/main下）修改AndroidManifest.xml中 android:minSdkVersion="9"改为 android:minSdkVersion="14";
 
 同时对应的jni文件下的Application.mk 中 APP_PLATFORM := android-9 改为
 APP_PLATFORM := android-14。
 
 ## 第五步 项目中加入对应的so库和引用
-
-
-
-
 
 - 编译完成后我们将ijkplayer项目导入Android Studio中运行一下，
 导入这个操作一定要做，不然不会生成
@@ -73,6 +77,7 @@ APP_PLATFORM := android-14。
 - 之后将我们所需架构所对应的包含so文件的文件夹（例：ijkplayer-x86/src/main/libs/下的x86文件夹）和**ijkplayer-java-release.aar**文件(在ijkplayer-java/build/output/aar文件夹下)拷贝到我们的项目libs目录下
 ![](http://upload-images.jianshu.io/upload_images/4273129-cf93e742fe67dfae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 - 然后在build.gradle文件中添加
+
 ```
 android{
 ...
