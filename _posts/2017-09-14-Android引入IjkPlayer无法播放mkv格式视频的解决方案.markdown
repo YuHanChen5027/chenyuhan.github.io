@@ -16,7 +16,7 @@ ijkplayer官方地址：https://github.com/Bilibili/ijkplayer
 ![](http://upload-images.jianshu.io/upload_images/4273129-aca8d434f081d2ba.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ndk的版本不要使用15，可以去网上下一个14的版本，否则可能会出现编译错误的状况。
-[ndk r14下载地址：](https://developer.android.google.cn/ndk/downloads/index.html)
+ndk r14下载地址：[https://developer.android.google.cn/ndk/downloads/index.htm](https://developer.android.google.cn/ndk/downloads/index.html)
 ## 第二步 进行源码的下拉
 - 在终端内输入以下命令：
 ```
