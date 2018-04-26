@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Mac下搭建nginx http点播服务器"
-date:   2018-09-30 13:57:42 +0800
+date:   2017ß-09-30 13:57:42 +0800
 categories: article
 ---
 ## 第一步 下载nginx和nginx_mod_h264_streaming-2.2.7

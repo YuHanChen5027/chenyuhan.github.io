@@ -56,5 +56,5 @@ public void onCompletion() {
 }
 });
 ```
-码云地址：[https://gitee.com/5027/VideoView](https://gitee.com/5027/VideoView)
+码云地址：[https://gitee.com/5027/VideoView] (https://gitee.com/5027/VideoView)
 
