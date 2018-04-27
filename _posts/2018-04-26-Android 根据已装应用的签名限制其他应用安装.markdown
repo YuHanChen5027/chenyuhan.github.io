@@ -4,6 +4,7 @@ title:  "Android 根据已装应用的签名限制其他应用安装"
 date:   2018-04-26 16:41:42 +0800
 categories: article
 ---
+
 参考文章：https://blog.csdn.net/loongembedded/article/details/54090873
 只有使用特定签名签的apk才可以安装，其他任何apk都不能安装
 
