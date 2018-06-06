@@ -71,7 +71,7 @@ throw new PackageManagerException(mLastScanError,
 ````
 同时要import缺少的类。
 ## 2 PackageManager.java
-/frameworks/base/core/java/android/content/pmPackageManager.java
+/frameworks/base/core/java/android/content/pm/PackageManager.java
 加入错误代码 INSTALL_FAILED_INVALID_SIGNATURES
 ```
 /** 

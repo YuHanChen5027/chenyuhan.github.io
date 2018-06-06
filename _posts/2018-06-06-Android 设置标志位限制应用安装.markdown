@@ -12,7 +12,7 @@ categories: article
 /frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java
 /frameworks/base/core/java/android/content/pm/PackageManager.java
 
-### 1 Settings.java
+## 1 Settings.java
 数据分类
 SettingsProvider对数据进行了分类，分别是Global、System、Secure三种类型，它们的区别如下：
 
@@ -39,7 +39,7 @@ APP_INSTALL_LOCK
 };
 
 ```
-### 2 DatabaseHelper.java
+## 2 DatabaseHelper.java
 设定标志位初始值
 在
 /frameworks/base/packages/SettingsProvider/res/values/defaults.xml
@@ -60,7 +60,7 @@ R.bool.def_app_install_lock);
 //cyh add end 
 ...
 ```
-### 3 PackageManagerService.java
+## 3 PackageManagerService.java
 在scanPackageLI方法下加入如下代码
 一定要将NullPointerException抛出，在标志位数据库未生成时会运行到这个方法内，若不抛出异常，则会卡在android开机画面
 ```
@@ -82,7 +82,7 @@ e.printStackTrace();
 }
 //cyh add end 
 ```
-### 4 PackageManager.java 
+## 4 PackageManager.java 
 加入错误标志，其实影响不大，看你要不要在自己的应用内做判断
 ```
 /**
