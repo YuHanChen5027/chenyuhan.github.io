@@ -35,7 +35,7 @@ int threshold;
 //保证有足够的空间进行数据存放，同时不会经常进行扩容。
 final float loadFactor;
 ```
-**Node**:HashMap的数据基类
+**Node**:**HashMap**的数据基类
 ```
 static class Node<K,V> implements Map.Entry<K,V> {
         //hash值
@@ -650,7 +650,7 @@ private void addEntry(int hash, K key, V value, int index) {
     }
     
 ```
-可以看出其实**HashTable**与**HashTable**的初始化类似，在初始化时是不会初始化我们的数据表**table**，只会初始化一些容量大小和负载因子的值，在第一次使用时才会创建。例如**putAll**。
+可以看出其实**HashTable**与**HashMap**的初始化类似，在初始化时是不会初始化我们的数据表**table**，只会初始化一些容量大小和负载因子的值，在第一次使用时才会创建。例如**putAll**。
 #### put(K,V)
 **put(K,V)**:推入指定的键值对的映射。如果该映射先前包含了该键的映射，则旧值将被替换。**key**和**value**都不能为null。
 ```
@@ -738,7 +738,7 @@ private void addEntry(int hash, K key, V value, int index) {
         count = 0;
     }
 ```
-
+**HashTable**的方法基本都是**synchronized**的，相对于**HashMap**是同步的。
 ## HashMap与HashTable的不同
 ### 一 线程安全性
 - **HashTable**方法添加了**synchronized**关键字，是同步的，是线程安全的

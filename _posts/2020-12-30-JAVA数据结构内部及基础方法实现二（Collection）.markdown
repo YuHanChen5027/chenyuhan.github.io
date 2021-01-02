@@ -858,8 +858,8 @@ public synchronized int lastIndexOf(Object o, int index) {
 ## Set
 **Set**是一种不包含重复的元素的**Collection**，即任意的两个元素e1和e2都有e1.equals(e2)=false，**Set**最多有一个**null**元素。
 ### HashSet
-**HashSet**中对重复元素的理解：和通常意义上的理解不太一样！
-两个元素（对象）的hashCode返回值相同，并且**equals**返回值为**true**时（或者地址相同时），才称这两个元素是相同的。
+**HashSet**这个类实现了**Set**集合，实际内部是使用**HashMap**的实例。**HashSet**中对重复元素的理解：和通常意义上的理解不太一样！
+两个元素（对象）的**hashCode**返回值相同，并且**equals**返回值为**true**时（或者**地址**相同时），才称这两个元素是相同的。
 **HashSet**的父类接口，以及内部有几个主要的变量，如下：
 ```
 public class HashSet<E>
