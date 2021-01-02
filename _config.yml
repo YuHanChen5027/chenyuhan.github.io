@@ -23,7 +23,7 @@ github_username:  YuHanChen5027
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-swiss
 
 #plugins:
 #  - jekyll-feed
@@ -39,3 +39,4 @@ theme: minima
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+port: 4001
