@@ -1,8 +1,12 @@
 ---
 layout: post
 title:  "Android进程和线程间通信方式"
+author: "陈宇瀚"
 date:   2020-03-02 11:46:20 +0800
 categories: article
+tags:
+  - Android 
+  - 进程与线程
 ---
 # Android进程和线程间通信方式
 进程：是具有一定独立功能的程序关于某个数据集合上的一次运行活动，进程是系统进行资源分配和调度的一个独立单位。

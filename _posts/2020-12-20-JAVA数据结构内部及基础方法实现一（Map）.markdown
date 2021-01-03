@@ -1,3 +1,14 @@
+---
+layout: post
+title:  "JAVA数据结构内部及基础方法实现一（Map）"
+author: "陈宇瀚"
+date:   2020-12-20 19:50:02 +0800
+categories: article
+tags:
+  - JAVA 
+  - 数据结构
+---
+
 JAVA有几种常用的数据结构，主要是继承**Collection**和**Map**这两个主要接口的数据实现类
 
 在jdk1.7和jdk1.8中，实现会有些许不同，之后会在注解中添加两版本区别

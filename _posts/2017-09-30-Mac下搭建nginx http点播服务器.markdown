@@ -1,8 +1,11 @@
 ---
 layout: post
 title:  "Mac下搭建nginx http点播服务器"
+author: "陈宇瀚"
 date:   2017-09-30 13:57:42 +0800
 categories: article
+tags:
+  - nginx
 ---
 ## 第一步 下载nginx和nginx_mod_h264_streaming-2.2.7
 nginx下载地址：http://nginx.org/en/download.html

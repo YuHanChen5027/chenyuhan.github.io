@@ -1,0 +1,5 @@
+I"$<p>基于RK Android6.0-MID代码
+packages/apps/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
+为防止之后遗忘，记录一下
+安装apk时会弹出输入弹窗，输入内容正确，才可以点击安装按钮，输入错误安装应用弹窗消失</p>
+:ET

@@ -1,0 +1,8 @@
+I"�<p>只有标志位为1的时候的apk才可以安装，否则apk都不能安装
+需要修改的文件有以下几个
+/frameworks/base/core/java/android/provider/Settings.java
+/frameworks/base/packages/SettingsProvider/src/com/android/providers/settings/DatabaseHelper.java
+/frameworks/base/packages/SettingsProvider/res/values/defaults.xml
+/frameworks/base/services/core/java/com/android/server/pm/PackageManagerService.java
+/frameworks/base/core/java/android/content/pm/PackageManager.java</p>
+:ET

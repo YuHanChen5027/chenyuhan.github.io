@@ -1,8 +1,12 @@
 ---
 layout: post
 title:  "Android引入IjkPlayer无法播放mkv格式视频的解决方案"
+author: "陈宇瀚"
 date:   2017-09-14 12:48:20 +0800
 categories: article
+tags:
+  - Android
+  - IjkPlayer
 ---
 ## 写在前面
 项目中直接引用或者直接编译源码得到的ijkplayer在播放mkv文件时出现（-10000）的错误，去项目github查看了才知道，默认是不支持mkv和rmvb格式视频的播放的。

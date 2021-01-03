@@ -1,0 +1,37 @@
+I"v<h1 id="java数据结构">JAVA数据结构</h1>
+<h3 id="map">Map</h3>
+<p><strong>Map</strong>接口提供key到value的映射。一个Map中不能包含相同的key，每个key只能映射一个value。</p>
+<h4 id="hashmap">HashMap</h4>
+<p><strong>HashMap</strong>继承<strong>Map</strong>接口，由数组+单链表或者数组+红黑树实现一个key-value映射的哈希表。是非同步的，同时允许nul
+danll value和null key。</p>
+
+<h4 id="hashtable">HashTable</h4>
+<p><strong>Hashtable</strong>与<strong>HashMap</strong>哈希冲突少的时候一样都是数组+单链表，任何非空（non-null）的对象都可作为key或者value，其方法都带有<strong>synchronized</strong>关键字，是线程同步的。</p>
+<h4 id="hashmap与hashtable的不同">HashMap与HashTable的不同</h4>
+<ul>
+  <li><strong>HashTable</strong>线程安全， <strong>HashMap</strong>线程不安全；</li>
+  <li><strong>HashMap</strong>删除了<strong>contains</strong>方法；</li>
+  <li><strong>HashMap</strong>key-value允许为null;<strong>HashTable</strong>不允许。
+    <h4 id="treemap">TreeMap</h4>
+    <p><strong>TreeMap</strong>是一个非同步<strong>有序</strong>的key-value集合，它通过红黑树实现,可以返回<strong>有序的key集合</strong>。</p>
+    <h2 id="collection">Collection</h2>
+    <p><strong>Collection</strong>是最基本的集合接口，一个<strong>Collection</strong>代表一组<strong>Object</strong>，<strong>Collection</strong>支持一个<strong>iterator()</strong>的方法，该方法返回一个迭代子，使用该迭代子即可逐一访问<strong>Collection</strong>中每一个元素。</p>
+    <h3 id="list">List</h3>
+    <p><strong>List</strong>是有序的<strong>Collection</strong>，用户能够使用索引来访问<strong>List</strong>中的元素，允许有相同的元素。</p>
+    <h4 id="linkedlist">LinkedList</h4>
+    <p><strong>双向链表</strong>结构，适用于乱序插入、删除。获取数据时首先判断是在前半部分还是后半部分，之后分别通过队首/队尾来向后、向前遍历获取对应的数据。</p>
+    <h4 id="arraylist">ArrayList</h4>
+    <p><strong>ArrayList</strong>是动态数组，底层就是一个数组, 因此按序查找快, 乱序插入, 删除因为涉及到后面元素移位所以性能慢。</p>
+    <h4 id="vector">Vector</h4>
+    <p><strong>Vector</strong>是矢量队列，与<strong>ArrayList</strong>不同，<strong>Vector</strong>中的操作是线程安全的。</p>
+    <h4 id="stack">Stack</h4>
+    <p><strong>Stack</strong>继承自<strong>Vector</strong>，实现一个后进先出的堆栈。<strong>Stack</strong>提供5个额外的方法使得<strong>Vector</strong>得以被当作堆栈使用。基本的<strong>push</strong>和<strong>pop</strong>方法，还有<strong>peek</strong>方法得到栈顶的元素，<strong>empty</strong>方法测试堆栈是否为空，<strong>search</strong>方法检测一个元素在堆栈中的位置。<strong>Stack</strong>刚创建后是空栈。</p>
+    <h3 id="set">Set</h3>
+    <p><strong>Set</strong>是一种不包含重复的元素的<strong>Collection</strong>，即任意的两个元素e1和e2都有e1.equals(e2)=false，Set最多有一个null元素。</p>
+    <h4 id="hashset">HashSet</h4>
+    <p><strong>HashSet</strong>这个类实现了<strong>Set</strong>集合，实际内部是使用<strong>HashMap</strong>的实例。内部使用<strong>HashMap</strong>存储时用key的位置来存储，value的地方存储一个没有内容的<strong>Object</strong>实例，所以可以保证没有重复的元素。<em>HashSet</em>是线程不同步的;</p>
+    <h4 id="treeset">TreeSet</h4>
+    <p><strong>TreeSet</strong>是一个有序的集合，它的作用是提供有序的Set集合。<strong>TreeSet</strong>的元素支持2种排序方式：自然排序或者根据提供的<strong>Comparator</strong>进行排序。</p>
+  </li>
+</ul>
+:ET

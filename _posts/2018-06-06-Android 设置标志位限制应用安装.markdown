@@ -2,7 +2,11 @@
 layout: post
 title:  "Android 设置标志位限制应用安装"
 date:   2018-06-06 12:01:20 +0800
+author: "陈宇瀚"
 categories: article
+tags:
+  - Android 
+  - Framework
 ---
 只有标志位为1的时候的apk才可以安装，否则apk都不能安装
 需要修改的文件有以下几个

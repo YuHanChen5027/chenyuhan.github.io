@@ -1,0 +1,23 @@
+I"�<p>自封装的MediaPlayer 结合 SurfaceView 和 TextureView 的播放视频控件
+调用方法：
+xml文件内添加</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>&lt;com.example.mvideoview.MyVideoView
+android:id="@+id/videoview"
+android:layout_width="match_parent"
+android:layout_height="match_parent" /&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>或者</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>&lt;com.example.mvideoview.MyTextureVideoView
+android:id="@+id/videoview"
+android:layout_width="match_parent"
+android:layout_height="match_parent" /&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+:ET

@@ -1,8 +1,12 @@
 ---
 layout: post
 title:  "自封装的MediaPlayer 结合 SurfaceView 和 TextureView 的播放视频控件"
+author: "陈宇瀚"
 date:   2017-11-28 15:40:10 +0800
 categories: article
+tags:
+  - MediaPlayer 
+  - 视频播放 
 ---
 
 自封装的MediaPlayer 结合 SurfaceView 和 TextureView 的播放视频控件

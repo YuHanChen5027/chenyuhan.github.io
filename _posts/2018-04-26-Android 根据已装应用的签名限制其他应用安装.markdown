@@ -1,8 +1,12 @@
 ---
 layout: post
 title:  "Android 根据已装应用的签名限制其他应用安装"
+author: "陈宇瀚"
 date:   2018-04-26 16:41:42 +0800
 categories: article
+tags:
+  - Android 
+  - Framework
 ---
 
 参考文章：https://blog.csdn.net/loongembedded/article/details/54090873

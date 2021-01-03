@@ -1,8 +1,12 @@
 ---
 layout: post
 title:  "Android 应用安装添加密码输入弹窗"
+author: "陈宇瀚"
 date:   2018-09-21 11:07:20 +0800
 categories: article
+tags:
+  - Android 
+  - Framework
 ---
 基于RK Android6.0-MID代码
 packages/apps/PackageInstaller/src/com/android/packageinstaller/PackageInstallerActivity.java
