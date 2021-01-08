@@ -304,7 +304,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
                                 hiTail = e;
                             }
                             /**
-                             * 这部分举个例子比较好理解呢，举个例子来看，假设oldCap = 16 = 10000，两个数据的hash分别为hash1 = 7 = 0111, hash2 = 23 = 10111
+                             * 这部分举个例子比较好理解，举个栗子来看，假设oldCap = 16 = 10000，两个数据的hash分别为hash1 = 7 = 0111, hash2 = 23 = 10111
                              * 未扩容的时候两个hash对应的下标分别是:
                              * (hash1 & oldCap -1) = 0111 & 01111 = 111
                              * (hash2 & oldCap -1) = 10111 & 01111 = 111 是同样的位置；

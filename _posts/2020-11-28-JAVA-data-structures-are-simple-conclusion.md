@@ -12,8 +12,7 @@ tags:
 ### Map
 **Map**接口提供key到value的映射。一个Map中不能包含相同的key，每个key只能映射一个value。
 #### HashMap
-**HashMap**继承**Map**接口，由数组+单链表或者数组+红黑树实现一个key-value映射的哈希表。是非同步的，同时允许nul
-danll value和null key。 
+**HashMap**继承**Map**接口，由数组+单链表或者数组+红黑树实现一个key-value映射的哈希表。是非同步的，同时允许null value和null key。 
 
 #### HashTable
 **Hashtable**与**HashMap**哈希冲突少的时候一样都是数组+单链表，任何非空（non-null）的对象都可作为key或者value，其方法都带有**synchronized**关键字，是线程同步的。
