@@ -744,6 +744,6 @@ static const RegJNIRec gRegJNI[] = {
 &ensp;&ensp; **runSelectLoop**发生在启动**System进程**完成之后，根据代码得到**Zygote**进程会进入一个无限循环，不断等待**AMS**的连接和请求创建新的应用程序进程。针对如何通过**ZygoteConnection.runOnce()**来创建一个新的进程过程比较复杂，之后另开一篇文章分析；
 
 整个过程可以用流程图简单概括：
-![image](http://note.youdao.com/yws/res/9192/C4DDB06C09A043F7AE1608B1DC369979)
+![image](/img/in_post/zygote_process_img.png)
 
 

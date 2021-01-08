@@ -1240,6 +1240,6 @@ public static void main(String argv[]) {
 &ensp;&ensp; 这部分启动了大量的服务。之后**System**进程就启动完成了，并进入**Looper.loop()**状态，等待消息的到来；
 
 这里画了一个简单的流程图，可以简单看下：
-![image](https://note.youdao.com/src/0841E9F3B3B049B7B25BEA656E66A5CB)
+![image](/img/in_post/system_process_img.png)
 
 
