@@ -20,19 +20,21 @@ tags:
 
 *列表服务顺序按照源码中的启动调用顺序(基于rk3399_industry Android 7.1.2代码)*
 ## startBootstrapServices()
-服务名 | 功能简介|
+
+服务名 | 功能简介
 ---|---
 Installer | 创建具有合适权限的关键目录，如/data/user
 ActivityManagerService | 简称AMS，管理着Android四大组建的生命周期，同时也管理着各个应用程序进程
 PowerManagerService | 电源管理服务
 LightsService | 管理设备各种led灯和显示背光等
 DisplayManagerService | 管理设备显示的生命周期，会根据当前连接的物理显示设备控制其逻辑显示，当状态变化时，会向系统和应用程序发送通知
-PackageManagerService |简称PMS，用于APK的权限验证、安装、删除等操作
+PackageManagerService | 简称PMS，用于APK的权限验证、安装、删除等操作
 UserManagerService | 主要功能是创建和删除用户，以及查询用户信息
 
 这部分是Android引导服务的启动，内部包含了Android Framework层如**AMS，PMS**这种非常重要，且经常用到的服务，除了这些服务，在该函数内部还会进行一些传感器服务的启动，但这部分并非直接调用java类，而是调用了jni方法，这里就不再细分。
 
 ## startCoreServices()
+
 服务名 | 功能简介
 ---|---
 BatteryService | 对设备电池状态进行监控的服务，当电池，充电状态，温度等信息发生变化时，会以广播的形式通知其他相关的进程和服务。
