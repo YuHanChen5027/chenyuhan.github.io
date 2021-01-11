@@ -605,6 +605,7 @@ public static void main(String[] args) {
 - startBootstrapServices()：引导服务
 - startCoreServices()：核心服务
 - startOtherServices()：其他服务
+
 #### startBootstrapServices()：引导服务
 ```java
 private void startBootstrapServices() {
@@ -627,7 +628,7 @@ private void startBootstrapServices() {
         // 管理led和显示背光，需要它来控制显示。
         mSystemServiceManager.startService(LightsService.class);
 
-        // 启动isplayManagerService
+        // 启动DisplayManagerService
         mDisplayManagerService = mSystemServiceManager.startService(DisplayManagerService.class);
 
         // 设置默认显示，在初始化PackageManagerService之前
@@ -698,6 +699,7 @@ private void startBootstrapServices() {
     // Tracks whether the updatable WebView is in a ready state and watches for update installs.
     mWebViewUpdateService = mSystemServiceManager.startService(WebViewUpdateService.class);
  }
+这部分是Android的核心服务，包含了电池管理服务，应用使用管理服务以及WebView更新服务。
 ```
 #### startOtherServices()：其他服务
 &ensp;&ensp; **startOtherServices()**这部分源码超多，估计得有个1000来行吧，为了让展示更容易看，去掉了一些简单的启动服务代码，去掉了其中的try-catch结构，内部的try-catch大部分都是抛出之后打印信息。
@@ -733,12 +735,12 @@ private void startOtherServices() {
         ....        
         //InstallSystemProviders
         mActivityManagerService.installSystemProviders();
-        //启动VibratorService
+        //启动VibratorService，震动服务
         vibrator = new VibratorService(context);
         ServiceManager.addService("vibrator", vibrator);
 
         if (!disableConsumerIr) {
-            //启动ConsumerIrService
+            //启动ConsumerIrService,远程控制服务，如红外遥控
             consumerIr = new ConsumerIrService(context);
             ServiceManager.addService(Context.CONSUMER_IR_SERVICE, consumerIr);
         }
@@ -836,12 +838,12 @@ private void startOtherServices() {
                 //启动DeviceIdleController
                 mSystemServiceManager.startService(DeviceIdleController.class);
 
-                //启动evicePolicyManagerService
+                //启动DevicePolicyManagerService
                 mSystemServiceManager.startService(DevicePolicyManagerService.Lifecycle.class);
             }
             //disableSystemUI表示是否禁用系统界面
             if (!disableSystemUI) {
-                //启动StatusBarManagerService
+                //启动StatusBarManagerService:状态栏服务
                 statusBar = new StatusBarManagerService(context, wm);
                 ServiceManager.addService(Context.STATUS_BAR_SERVICE, statusBar);
             }
@@ -1134,8 +1136,9 @@ private void startOtherServices() {
             mSystemServiceManager.startService(MediaProjectionManagerService.class);
         }
 
+	//判断是否是手表之类的穿戴设备，if内部是一些穿戴设备服务
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WATCH)) {
-            //启动WearBluetoothServicea、WearWifiMediatorService
+            //启动WearBluetoothService、WearWifiMediatorService
             mSystemServiceManager.startService(WEAR_BLUETOOTH_SERVICE_CLASS);
             mSystemServiceManager.startService(WEAR_WIFI_MEDIATOR_SERVICE_CLASS);
             if (SystemProperties.getBoolean("config.enable_cellmediator", false)) {
@@ -1151,7 +1154,7 @@ private void startOtherServices() {
         // 为system_server进程启用JIT
         VMRuntime.getRuntime().startJitCompilation();
 
-        // 启动MmsServiceBroker
+        // 启动MmsServiceBroker:彩信服务
         mmsService = mSystemServiceManager.startService(MmsServiceBroker.class);
 
         if (Settings.Global.getInt(mContentResolver, Settings.Global.DEVICE_PROVISIONED, 0) == 0 ||
