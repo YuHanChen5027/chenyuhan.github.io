@@ -13,8 +13,9 @@ future: true
 
 # SNS settings
 RSS: false
-weibo_username:     陈瀚仔
+weibo_username:     ChenHanZai
 github_username:    YuHanChen5027
+jianshu_username:   c241df6b66d1
 #twitter_username:   YuHanChen5027
 #facebook_username:  YuHanChen5027
 #linkedin_username:  firstname-lastname-idxxxx

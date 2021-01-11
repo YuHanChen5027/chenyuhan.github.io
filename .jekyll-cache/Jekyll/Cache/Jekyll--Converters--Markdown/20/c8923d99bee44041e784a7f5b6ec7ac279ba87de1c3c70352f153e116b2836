@@ -1,7 +1,0 @@
-I"�<h1 id="java数据结构">JAVA数据结构</h1>
-<h3 id="map">Map</h3>
-<p><strong>Map</strong>接口提供key到value的映射。一个Map中不能包含相同的key，每个key只能映射一个value。</p>
-<h4 id="hashmap">HashMap</h4>
-<p><strong>HashMap</strong>继承<strong>Map</strong>接口，由数组+单链表或者数组+红黑树实现一个key-value映射的哈希表。是非同步的，同时允许nul
-danll value和null key。</p>
-:ET

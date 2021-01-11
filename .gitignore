@@ -1,0 +1,6 @@
+_site
+.jekyll-cache
+.sass-cache
+_posts/.jekyll-cache
+_posts/_site
+_site/article
