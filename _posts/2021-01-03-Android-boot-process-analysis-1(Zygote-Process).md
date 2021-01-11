@@ -16,7 +16,7 @@ tags:
 &ensp;&ensp; *以下源码基于rk3399_industry Android7.1.2*
 ## init.rc
 **system/core/init/init.cpp**
-```
+```cpp
     ....
     //构造出解析文件用的parser对象
     Parser& parser = Parser::GetInstance();
@@ -34,7 +34,7 @@ tags:
     ....
 ```
 **system/core/rootdir/init.rc**
-```
+```java
 import /init.environ.rc
 import /init.usb.rc
 import /init.${ro.hardware}.rc
@@ -50,6 +50,7 @@ import /init.${ro.zygote}.rc
 **ro.zygote**的属性值定义是在 **build/target/product/core_64_bit.mk**
 而**core_64_bit.mk**在**device/rockchip/rk3399/product.mk**内调用(根据芯片平台不同，对应的文件便不同，这里以RK3399为例子)，代码如下
 **device/rockchip/rk3399/product.mk**
+
 ```
 PRODUCT_RUNTIMES := runtime_libart_default
 
@@ -57,8 +58,10 @@ $(call inherit-product, device/rockchip/rk3399/device.mk)
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 ```
+
 其中$(SRC_TARGET_DIR)为**build/target**。
 **build/target/product/core_64_bit.mk**
+
 ```
 ifeq ($(strip $(TARGET_BOARD_PLATFORM_PRODUCT)), box)
   PRODUCT_COPY_FILES += system/core/rootdir/init.zygote64_32.box.rc:root/init.zygote64_32.rc
@@ -113,7 +116,7 @@ service zygote_secondary /system/bin/app_process32 -Xzygote /system/bin --zygote
 ## app_process的执行
 &ensp;&ensp; 接下来分析**zygote64**的可执行程序**/system/bin/app_process64**文件，**app_process64**由**frameworks/base/cmds/app_process**生成，**app_process64**的执行入口是目录下的**app_main.cpp**中的**main**函数，就从这里开始分析**Zygote**的启动流程：
 **rameworks/base/cmds/app_process/app_main.cpp**
-```
+```cpp
 #if defined(__LP64__)
 static const char ABI_LIST_PROPERTY[] = "ro.product.cpu.abilist64";
 static const char ZYGOTE_NICE_NAME[] = "zygote64";
@@ -316,7 +319,7 @@ AndroidRuntime::AndroidRuntime(char* argBlockStart, const size_t argBlockLength)
 
 &ensp;&ensp; **runtime**为**AppRuntime**，而**AppRuntime**继承自**AndroidRuntime**，**AppRuntime**其内部并没有**start**方法，所以这里其实调用的是**AndroidRuntime**的**start**方法，源码如下：
 **frameworks/base/core/jni/AndroidRuntime.cpp**
-```
+```cpp
 /*
  * 启动 Android runtime.这部分涉及到启动虚拟机并在名为“className”的类中调用其
  * “static void main(String[] args)”方法。
@@ -425,7 +428,7 @@ void AndroidRuntime::start(const char* className, const Vector<String8>& options
 
 ### AndroidRuntime.startVm:启动虚拟机
 &ensp;&ensp; **startVm**内部定义了虚拟机的一系列参数，下面简单介绍一些虚拟机的参数，大部分省略掉了，太多了。
-```
+```cpp
 /*
  * 启动Dalvik虚拟机。
  *
@@ -512,7 +515,7 @@ int AndroidRuntime::startVm(JavaVM** pJavaVM, JNIEnv** pEnv, bool zygote)
 }
 ```
 ### AndroidRuntime.startReg:注册jni函数
-```
+```cpp
 /*
  * 向VM注册android jni函数。
  */
@@ -580,7 +583,7 @@ static const RegJNIRec gRegJNI[] = {
 &ensp;&ensp; 到此，虚拟机已经启动，jni函数也已经注册，这里只是简单分析，毕竟完整的分析就有点偏离启动流程了。之后进入**ZygoteInit.main**类的**main**函数；
 ## ZygoteInit.main
 **frameworks/base/core/java/com/android/internal/os/ZygoteInit.java**
-```
+```java
   private static final String ABI_LIST_ARG = "--abi-list=";
 
   private static final String SOCKET_NAME_ARG = "--socket-name=";
@@ -658,7 +661,7 @@ static const RegJNIRec gRegJNI[] = {
 ```
 ### registerZygoteSocket
 &ensp;&ensp; **registerZygoteSocket**:创建名为**zygote**的**Server**端**socket**：用来等待**ActivityManagerService**请求**Zygote**进程创建新的应用程序进程。
-```
+```java
  private static LocalServerSocket sServerSocket;
  private static final String ANDROID_SOCKET_PREFIX = "ANDROID_SOCKET_";
  private static void registerZygoteSocket(String socketName) {
@@ -690,7 +693,7 @@ static const RegJNIRec gRegJNI[] = {
 &ensp;&ensp; 创建完成后，会进行一些预加载类和资源，如果有需要会调用**startSystemServer**启动**System**进程，然后调用**runSelectLoop**进行循环等待。
 ### runSelectLoop
 &ensp;&ensp; **runSelectLoop**:进入循环等待,等待**Activity**管理服务**ActivityManagerService**(以下简称**AMS**)，请求**Zygote**进程创建新的应用程序进程。
-```
+```java
     /**
      * 运行Zygote进程的循环等待，当新的连接请求发生时生成新的应用程序进程。
      */

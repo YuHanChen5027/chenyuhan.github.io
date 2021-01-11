@@ -17,7 +17,7 @@ JAVA有几种常用的数据结构，主要是继承**Collection**和**Map**这�
 **Collection**是最基本的集合接口，一个**Collection**代表一组**Object**，即**Collection**的元素**Elements**。一些**Collection**允许相同的元素而另一些不行。一些能排序而另一些不行。**Java SDK**不提供直接继承自**Collection**的类，**Java SDK**提供的类都是继承自**Collection的**“子接口”如**List**和**Set**。
 
 论**Collection**的实际类型如何，它都支持一个**iterator**()的方法，该方法返回一个**迭代子**，使用该迭代子即可逐一访问**Collection**中每一个元素。典型的用法如下：
-```
+```java
 Iterator it = collection.iterator(); // 获得一个迭代子
 　　　　while(it.hasNext()) {
 　　　　　　Object obj = it.next(); // 得到下一个元素
@@ -31,7 +31,7 @@ Iterator it = collection.iterator(); // 获得一个迭代子
 双向链表结构，适用于乱序插入、删除。但指定序列操作性能不如**ArrayList**。
 
 **LinkedList**的父类接口，以及内部有几个主要的变量，如下：
-```
+```java
 public class LinkedList<E>
     extends AbstractSequentialList<E>
     implements List<E>, Deque<E>, Cloneable, java.io.Serializable
@@ -45,7 +45,7 @@ transient Node<E> last;//链表末尾节点指针
 ```
 *注：实现了Cloneable接口，即实现clone()函数。代表能被克隆。*
 数据类**Node**的结构
-```
+```java
   private static class Node<E> {
         E item;//节点数据
         Node<E> next;//当前节点下一个节点
@@ -59,7 +59,7 @@ transient Node<E> last;//链表末尾节点指针
     }
 ```
 #### 构造方法
-```
+```java
  public LinkedList() {
  }
  //构造一个包含指定元素的列表
@@ -80,7 +80,7 @@ public boolean addAll(Collection<? extends E> c) {
 
 #### add()/addLast(E)/add(int,E)
 **add(E)/addLast(E)**:将指定的元素添加到列表的末尾。
-```
+```java
 public boolean add(E e) {
         linkLast(e);
         return true;
@@ -102,7 +102,7 @@ public void addLast(E e) {
     }
 ```
 **add(int,E)**:在列表的指定位置插入指定的元素。
-```
+```java
  public void add(int index, E element) {
         //判断index下标是否在链表范围内(0=<index<=size),超出则抛出IndexOutOfBoundsException 
         checkPositionIndex(index);
@@ -132,7 +132,7 @@ public void addLast(E e) {
 ```
 #### remove(int)
 **remove(int)**：删除列表中指定位置的元素。
-```
+```java
  public E remove(int index) {
         /**判断index下标是否在链表索引范围内(0=<index<size),超出则抛出IndexOutOfBoundsException**/
         checkElementIndex(index);
@@ -168,7 +168,7 @@ public void addLast(E e) {
 ```
 #### get(int)
 **get(int)**:Returns the element at the specified position in this list.
-```
+```java
 public E get(int index){
         /**判断index下标是否在链表索引范围内(0=<index<size),超出则抛出IndexOutOfBoundsException**/
         checkElementIndex(index);
@@ -197,7 +197,7 @@ public E get(int index){
 ```
 #### set(int,E)
 **set(int,E)**:将列表中指定位置的元素替换为指定的元素。
-```
+```java
   public E set(int index, E element) {
         /**判断index下标是否在链表索引范围内(0=<index<size),超出则抛出IndexOutOfBoundsException**/
         checkElementIndex(index);
@@ -210,7 +210,7 @@ public E get(int index){
 #### addAll(Collection<? extends E>)/addAll(int , Collection<? extends E>)
 **addAll(Collection<? extends E>)/addAll(int , Collection<? extends E>)**
 ：将指定集合中的所有元素添加到末尾/index节点之后
-```
+```java
    //本质上是调用同个方法
    public boolean addAll(Collection<? extends E> c) {
         return addAll(size, c);//传入size,直接在末尾插入
@@ -267,7 +267,7 @@ public E get(int index){
 ```
 #### clear()
 **clear()**:从列表中删除所有元素。
-```
+```java
 public void clear() {
         //将链表中间的节点内容都设置为null
         for (Node<E> x = first; x != null; ) {
@@ -288,7 +288,7 @@ public void clear() {
 ### ArrayList（以下代码基于JAVA8）
 **ArrayList**是动态数组，底层就是一个数组, 因此按序查找快, 乱序插入, 删除因为涉及到后面元素移位所以性能慢。
 首先需要介绍一个**ArrayList**方法内常用的一个方法**Arrays.copyOf(T[],int)**，作用是复制数组，在**ArrayList**初始化，扩容时都会用到，代码如下
-```
+```java
  //第一个参数是原始数组，第二个是返回数组的长度
  public static <T> T[] copyOf(T[] original, int newLength) {
         return (T[]) copyOf(original, newLength, original.getClass());
@@ -308,7 +308,7 @@ public void clear() {
 
 ```
 **ArrayList**的父类接口，以及内部有几个主要的变量，如下：
-```
+```java
  public class ArrayList<E> extends AbstractList<E>
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable
     
@@ -325,7 +325,7 @@ private int size;//实际元素个数
 *注：RandmoAccess接口，即提供了随机访问功能。*
 ### 构造方法
 **构造方法**:**ArrayList**构造方法分为三个：
-```
+```java
 //置为DEFAULTCAPACITY_EMPTY_ELEMENTDATA的空列表，之后会在第一次添加元素时扩容成10容量。
 public ArrayList() {
         this.elementData = DEFAULTCAPACITY_EMPTY_ELEMENTDATA;
@@ -370,7 +370,7 @@ public ArrayList(int initialCapacity) {
 以下是使用时的常用方法实现代码以及分析:
 #### add(E)/add(int,E)
 **add(E)**:将指定的元素添加到列表的末尾，调用过程如下。
-```
+```java
  public boolean add(E e) {
         //判断增加一个元素后的容量是否超出当前数组容量，超过扩容，不超过则不变
         ensureCapacityInternal(size + 1);  // Increments modCount!!
@@ -424,7 +424,7 @@ public ArrayList(int initialCapacity) {
     }
 ```
 **add(int,E)**:在列表中的指定位置插入指定的元素。将当前位于该位置的元素(如果有的话)和随后的元素向右移动(下标加1)。
-```
+```java
  public void add(int index, E element) {
         //插入位置超过当前数据尺寸或者插入位置小于0
         if (index > size || index < 0)
@@ -442,7 +442,7 @@ public ArrayList(int initialCapacity) {
 ```
 #### remove(int)
 **remove(int):**:删除列表中指定位置的元素。将所有后续元素向左移动(从它们的下标减去1)。
-```
+```java
  public E remove(int index) {
         //判断是否超出范围
         if (index >= size)
@@ -471,7 +471,7 @@ public ArrayList(int initialCapacity) {
 ```
 #### get(E)
 **get(E)**:返回列表中指定位置的元素。
-```
+```java
  public E get(int index) {
         if (index >= size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -481,7 +481,7 @@ public ArrayList(int initialCapacity) {
 ```
 #### set(int,E)
 **set(int,E)**:用指定的元素替换列表中指定位置的元素。
-```
+```java
 public E set(int index, E element) {
         if (index >= size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -493,7 +493,7 @@ public E set(int index, E element) {
 ```
 #### addAll(Collection<? extends E>)/addAll(int , Collection<? extends E>)
 **addAll(Collection<? extends E>)**:将指定集合中的所有元素追加到末尾
-```
+```java
  public boolean addAll(Collection<? extends E> c) {
         //将集合转成数组，并获取数组长度
         Object[] a = c.toArray();
@@ -509,7 +509,7 @@ public E set(int index, E element) {
     }
 ```
 **addAll(int , Collection<? extends E>)**:将指定集合中的所有元素插入到此列表中，从指定位置开始。
-```
+```java
 public boolean addAll(int index, Collection<? extends E> c) {
         if (index > size || index < 0)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
@@ -533,7 +533,7 @@ public boolean addAll(int index, Collection<? extends E> c) {
 ```
 #### clear()
 **clear()**:从列表中删除所有元素。
-```
+```java
  public void clear() {
         modCount++;
 
@@ -550,7 +550,7 @@ public boolean addAll(int index, Collection<? extends E> c) {
 ### Vector
 **Vector**是矢量队列，与**ArrayList**不同，**Vector**中的操作是**线程安全**的。
 **Vector**的父类接口，以及内部有几个主要的变量，如下：
-```
+```java
 public class Vector<E>
     extends AbstractList<E>
     implements List<E>, RandomAccess, Cloneable, java.io.Serializable
@@ -562,7 +562,7 @@ public class Vector<E>
 ```
 #### 构造方法
 **构造方法**:**Vector**构造方法分为三个：
-```
+```java
  public Vector() {
         //初始化容量为10
         this(10);
@@ -595,7 +595,7 @@ public class Vector<E>
 带**Collection**参数的构造方法：按照传入的集合构造一个包含指定元素的列表，r将集合转成数组直接赋值给**elementData**，将元素个数赋值给**elementCount**，最后将**elementData**转换成Object[]类的数组；
 #### add(E)/add(int,E)
 **add(E)**:将指定的元素添加到Vector的末尾。**synchronized**方法，线程安全。
-```
+```java
   public synchronized boolean add(E e) {
         modCount++;
         //容量判断，容量不够则扩容，不然则不变
@@ -636,7 +636,7 @@ public class Vector<E>
     }
 ```
 **add(int,E)**：在Vector的指定位置插入指定元素。该方法内部调用的方法有**synchronized**，所以也是线程安全的。
-```
+```java
  public void add(int index, E element) {
         insertElementAt(element, index);
     }
@@ -662,7 +662,7 @@ public class Vector<E>
 ```
 #### remove(int)
 **remove(int)**:移除Vector中指定位置的元素。线程安全
-```
+```java
  public synchronized E remove(int index) {
         modCount++;
         if (index >= elementCount)
@@ -682,7 +682,7 @@ public class Vector<E>
 ```
 #### get(E)
 **get(E)**:返回该Vector中指定位置的元素。线程安全
-```
+```java
  public synchronized E get(int index) {
         if (index >= elementCount)
             throw new ArrayIndexOutOfBoundsException(index);
@@ -692,7 +692,7 @@ public class Vector<E>
 ```
 #### set(int,E)
 **set(int,E)**:用指定的元素替换Vector中指定位置的元素。
-```
+```java
  public synchronized E set(int index, E element) {
         if (index >= elementCount)
             throw new ArrayIndexOutOfBoundsException(index);
@@ -704,7 +704,7 @@ public class Vector<E>
 ```
 #### addAll(Collection<? extends E>)/addAll(int , Collection<? extends E>)
 **addAll(Collection<? extends E>)**：将指定集合中的所有元素追加到末尾，线程安全
-```
+```java
  public synchronized boolean addAll(Collection<? extends E> c) {
         modCount++;
         Object[] a = c.toArray();
@@ -718,7 +718,7 @@ public class Vector<E>
     }
 ```
 **addAll(int , Collection<? extends E>)**:将指定集合中的所有元素插入到Vector的指定位置。线程安全
-```
+```java
   public synchronized boolean addAll(int index, Collection<? extends E> c) {
         modCount++;
         if (index < 0 || index > elementCount)
@@ -742,7 +742,7 @@ public class Vector<E>
 ```
 #### clear();
 **clear()**:从Vector中删除所有元素。线程安全
-```
+```java
  public void clear() {
         removeAllElements();
     }
@@ -760,14 +760,14 @@ public class Vector<E>
 ### Stack
 **Stack**继承自**Vector**，实现一个**后进先出**的堆栈。**Stack**提供5个额外的方法使得**Vector**得以被当作堆栈使用。基本的**push**和**pop**方法，还有**peek**方法得到栈顶的元素，**empty**方法测试堆栈是否为空，**search**方法检测一个元素在堆栈中的位置。**Stack**刚创建后是空栈。
 #### 构造方法
-```
+```java
  //创建一个空堆栈。
  public Stack() {
     }
 ```
 #### push(E)
 **push(E)**:将E推到堆栈的顶部.
-```
+```java
  public E push(E item) {
         addElement(item);
 
@@ -782,7 +782,7 @@ public class Vector<E>
 ```
 #### peek()
 **peek()**:查看堆栈顶部的对象，而不将其从堆栈中移除。
-```
+```java
  public synchronized E peek() {
         int     len = size();
 
@@ -793,7 +793,7 @@ public class Vector<E>
 ```
 #### pop()
 **pop()**:删除堆栈顶部的对象，并将该对象作为函数的值返回。
-```
+```java
      public synchronized E pop() {
         E       obj;
         int     len = size();
@@ -825,14 +825,14 @@ public class Vector<E>
 ```
 #### empty()
 **empty()**:查看此堆栈是否为空。本质是看数据size是否为0
-```
+```java
  public boolean empty() {
         return size() == 0;
     }
 ```
 #### search(Object)
 **search(Object)**:返回对象在堆栈中的基于1(即栈顶)的位置。
-```
+```java
 public synchronized int search(Object o) {
         int i = lastIndexOf(o);
         
@@ -870,7 +870,7 @@ public synchronized int lastIndexOf(Object o, int index) {
 **HashSet**这个类实现了**Set**集合，实际内部是使用**HashMap**的实例。**HashSet**中对重复元素的理解：和通常意义上的理解不太一样！
 两个元素（对象）的**hashCode**返回值相同，并且**equals**返回值为**true**时（或者**地址**相同时），才称这两个元素是相同的。
 **HashSet**的父类接口，以及内部有几个主要的变量，如下：
-```
+```java
 public class HashSet<E>
     extends AbstractSet<E>
     implements Set<E>, Cloneable, java.io.Serializable
@@ -881,7 +881,7 @@ public class HashSet<E>
 ```
 可以看到**HashSet**内部其实是由**HashMap**组成，**HashMap**是一种存储键值对的哈希表.
 #### 构造方法
-```
+```java
  //构造一个新的空集合;支持HashMap实例具有默认初始容量(16)和负载系数(0.75)。
  public HashSet() {
         map = new HashMap<>();
@@ -908,28 +908,28 @@ public class HashSet<E>
 ```
 #### add(E)/add(int,E)
 **add(E)**:如果E还不存在的话，将指定的元素添加到这个集合中。如果存在，则值不变直接返回false;
-```
+```java
   public boolean add(E e) {
         return map.put(e, PRESENT)==null;
     }
 ```
 代码可以看出
 #### remove(int):如果指定的元素存在，则从集合中移除该元素。返回集合中是否包含此元素。
-```
+```java
    public boolean remove(Object o) {
         return map.remove(o)==PRESENT;
     }
 ```
 #### contains(Object)
 **contains(Object)**:返回**HashSet**中是否包含此元素
-```
+```java
   public boolean contains(Object o) {
         return map.containsKey(o);
     }
 ```
 #### clear()
 **clear()**:从集合中删除所有元素。
-```
+```java
  public void clear() {
         map.clear();
     }

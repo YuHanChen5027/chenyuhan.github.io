@@ -14,14 +14,14 @@ packages/apps/PackageInstaller/src/com/android/packageinstaller/PackageInstaller
 安装apk时会弹出输入弹窗，输入内容正确，才可以点击安装按钮，输入错误安装应用弹窗消失
 
 先引用需要用到的类
-```
+```java
 import android.widget.EditText;
 import android.app.AlertDialog;
 import android.view.Display;
 import android.view.WindowManager;
 ```
-在startInstallConfirm方法内添加如下代码
-```
+在**startInstallConfirm**方法内添加如下代码
+```java
 //cyh add start
           try {
                 String packageName = mPkgInfo.packageName;     

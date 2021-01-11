@@ -26,7 +26,7 @@ Secure：安全性的用户偏好系统设置，第三方APP有读没有写的�
 参考文章：https://blog.csdn.net/myfriend0/article/details/59107989
 我们这次添加在Global中，要添加另外两个类中方法也是类似的
 首先我们在Settings的内部类Global中加入我们用来限制应用安装的标志位
-```  
+```java
 /**
 * cyh add 
 * app install lock
@@ -34,12 +34,12 @@ Secure：安全性的用户偏好系统设置，第三方APP有读没有写的�
 */
 public static final String APP_INSTALL_LOCK = "app_install_lock";
 ```
-之后在SETTINGS_TO_BACKUP字符串数组中加入这个标志位
-```
+之后在**SETTINGS_TO_BACKUP**字符串数组中加入这个标志位
+```java
 public static final String[] SETTINGS_TO_BACKUP = {
-...
-...
-APP_INSTALL_LOCK
+    ...
+    ...
+    APP_INSTALL_LOCK
 };
 
 ```
@@ -48,14 +48,14 @@ APP_INSTALL_LOCK
 在
 /frameworks/base/packages/SettingsProvider/res/values/defaults.xml
 资源文件内加入默认值
-```
+```xml
 ...
 <!-- cyh add app install lock -->
 <bool name="def_app_install_lock">true</bool>
 ...
 ```
 在DatabaseHelper的loadGlobalSettings()方法内（System类型就在loadSystemSettings()方法内）加入初始值设置
-```
+```java
 ...
 //cyh add start
 //设定默认值
@@ -67,28 +67,28 @@ R.bool.def_app_install_lock);
 ## 3 PackageManagerService.java
 在scanPackageLI方法下加入如下代码
 一定要将NullPointerException抛出，在标志位数据库未生成时会运行到这个方法内，若不抛出异常，则会卡在android开机画面
-```
+```java
 boolean success = false;
 //cyh add start
 //获取应用安装锁
 if(mContext!=null&&mContext.getContentResolver()!=null){
-try {
-int  appInstallLock = android.provider.Settings.Global.getInt(mContext.getContentResolver(),android.provider.Settings.Global.APP_INSTALL_LOCK , 1);
+    try {
+    int  appInstallLock = android.provider.Settings.Global.getInt(mContext.getContentResolver(),android.provider.Settings.Global.APP_INSTALL_LOCK , 1);
 if (appInstallLock==0){
-int mLastScanError = PackageManager.INSTALL_FAILED_INVALID_LOCK;
-throw new PackageManagerException(mLastScanError,
-"禁止安装，安装模式未开启动");
-}
+    int mLastScanError = PackageManager.INSTALL_FAILED_INVALID_LOCK;
+    throw new PackageManagerException(mLastScanError,
+    "禁止安装，安装模式未开启动");
+    }
 }catch(NullPointerException e){
-//一定要将NullPointerException抛出，在标志位数据库未生成时会运行到这个方法内，若不抛出异常，则会卡在android开机画面
-e.printStackTrace();
-}
+    //一定要将NullPointerException抛出，在标志位数据库未生成时会运行到这个方法内，若不抛出异常，则会卡在android开机画面
+    e.printStackTrace();
+    }
 }
 //cyh add end 
 ```
 ## 4 PackageManager.java 
 加入错误标志，其实影响不大，看你要不要在自己的应用内做判断
-```
+```java
 /**
 * cyh add
 * app install failed lock noopen
@@ -100,23 +100,23 @@ public static final int INSTALL_FAILED_INVALID_LOCK = -27;
 
 使用方式：
 在自己的应用内加入权限
-```
+```xml
 <!-- 用于读取，修改标志位-->
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
 ```
 在方法中
-```
+```java
 private final String APP_INSTALL_LOCK = "app_install_lock";
 ...
 //方法内
 //读取标志位的值
 int keyValue;
 try {
-int keyValue = Settings.Global.getInt(getContentResolver(),APP_INSTALL_LOCK);
+    int keyValue = Settings.Global.getInt(getContentResolver(),APP_INSTALL_LOCK);
 } catch (Settings.SettingNotFoundException e) {
-e.printStackTrace();
+    e.printStackTrace();
 }
 //修改标志位的值
 Settings.Global.putInt(getContentResolver(),APP_INSTALL_LOCK,value==0? 

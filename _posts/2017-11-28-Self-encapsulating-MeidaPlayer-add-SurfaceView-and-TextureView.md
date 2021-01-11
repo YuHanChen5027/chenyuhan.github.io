@@ -12,14 +12,14 @@ tags:
 自封装的MediaPlayer 结合 SurfaceView 和 TextureView 的播放视频控件
 调用方法：
 xml文件内添加
-```
+```xml
 <com.example.mvideoview.MyVideoView
 android:id="@+id/videoview"
 android:layout_width="match_parent"
 android:layout_height="match_parent" />
 ```
 或者
-```
+```xml
 <com.example.mvideoview.MyTextureVideoView
 android:id="@+id/videoview"
 android:layout_width="match_parent"
@@ -27,7 +27,7 @@ android:layout_height="match_parent" />
 ```
 
 在界面内设置
-```
+```java
 //播放路径
 String url = "";
 myVideoView = findViewById(R.id.videoview);

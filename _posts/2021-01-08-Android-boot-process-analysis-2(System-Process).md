@@ -13,8 +13,8 @@ tags:
 
 ## ZygoteInit.startSystemServer
 &ensp;&ensp; **startSystemServer**:为**System**服务进程准备参数并从**Zygote**中**fork**出来。源码如下：
-```
-    private static boolean startSystemServer(String abiList, String socketName)
+```java
+private static boolean startSystemServer(String abiList, String socketName)
             throws MethodAndArgsCaller, RuntimeException {
         long capabilities = posixCapabilitiesAsBits(
             OsConstants.CAP_IPC_LOCK,
@@ -140,8 +140,8 @@ tags:
 
 ### RuntimeInit.zygoteInit
 **frameworks/base/core/java/com/android/internal/os/RuntimeInit.java**
-```
-    public static final void zygoteInit(int targetSdkVersion, String[] argv, ClassLoader classLoader)
+```java
+public static final void zygoteInit(int targetSdkVersion, String[] argv, ClassLoader classLoader)
             throws ZygoteInit.MethodAndArgsCaller {
         Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "RuntimeInit");
         //重定向log输出
@@ -220,7 +220,7 @@ tags:
 **zygoteInit**方法主要进行了System进程的时区和键盘布局等一些通用信息的设置，native层的初始化，之后会调用调用应用程序java层的main方法。下面来细看下这些设置和初始化方法。
 #### nativeZygoteInit()
 &ensp;&ensp; **nativeZygoteInit()**方法最后会调用jni方法，位于**frameworks/base/core/jni/AndroidRuntime.cpp**方法内，源码如下：
-```
+```java
 static void com_android_internal_os_RuntimeInit_nativeZygoteInit(JNIEnv* env, jobject clazz)
 {
     //根据 app_process的执行 那部分分析得出，gCurRuntime是一个AppRuntime对象
@@ -272,7 +272,7 @@ String8 ProcessState::makeBinderThreadName() {
 
 #### RuntimeInit.applicationInit
 **frameworks/base/core/java/com/android/internal/os/RuntimeInit.java**
-```
+```java
  private static void applicationInit(int targetSdkVersion, String[] argv, ClassLoader classLoader)
             throws ZygoteInit.MethodAndArgsCaller {
         nativeSetExitWithoutCleanup(true);
@@ -343,7 +343,7 @@ String8 ProcessState::makeBinderThreadName() {
     }
 ```
 &ensp;&ensp; 由于新创建的**System**进程复制了**Zygote**进程的地址空间，因此，新创建的进程的调用堆栈与**Zygote**进程的一致，因此当**RuntimeInit.invokeStaticMain**抛出一个**MethodAndArgsCaller**的异常时，系统就会沿着这个调用过程往后寻找一个代码块捕获并处理。这部分的代码就在**ZygoteInit.main**函数内，我们往下看源码：
-```
+```java
 public static void main(String argv[]) {
         ....
         try {
@@ -358,8 +358,8 @@ public static void main(String argv[]) {
 ```
 &ensp;&ensp; 可以看到**ZygoteInit.main**中通过**try-catch**捕获了**MethodAndArgsCaller**这一异常，并调用了**MethodAndArgsCaller**对象的**run**方法;我们接下来就看一下这个**run**方法;
 &ensp;&ensp; **ZygoteInit.MethodAndArgsCaller**:位于**frameworks/base/core/java/com/android/internal/os/ZygoteInit.java**文件内
-```
-    public static class MethodAndArgsCaller extends Exception
+```java
+public static class MethodAndArgsCaller extends Exception
             implements Runnable {
         /** 要调用的方法 */
         private final Method mMethod;
@@ -398,10 +398,10 @@ public static void main(String argv[]) {
 ## SystemServer.main
 **frameworks/base/services/java/com/android/server/SystemServer.java**
 源码如下：
-```
+```java
  //可支持的最早时间，即1970年
- private static final long EARLIEST_SUPPORTED_TIME = 86400 * 1000;
- public static void main(String[] args) {
+private static final long EARLIEST_SUPPORTED_TIME = 86400 * 1000;
+public static void main(String[] args) {
         new SystemServer().run();
     }
     
@@ -606,8 +606,8 @@ public static void main(String argv[]) {
 - startCoreServices()：核心服务
 - startOtherServices()：其他服务
 #### startBootstrapServices()：引导服务
-```
-    private void startBootstrapServices() {
+```java
+private void startBootstrapServices() {
         // 等待Install完成启动，它会创建具有合适权限的关键目录，如/data/user
         // 需要在初始化其他服务前完成
         Installer installer = mSystemServiceManager.startService(Installer.class);
@@ -682,27 +682,27 @@ public static void main(String argv[]) {
 &ensp;&ensp; 总的来说，引导服务包括：ActivityManagerService，PowerManagerService，LightsService，DisplayManagerService，PackageManagerService，UserManagerService，传感器服务。
 
 #### startCoreServices()：核心服务
-```
- /**
-     * Starts some essential services that are not tangled up in the bootstrap process.
-     */
-    private void startCoreServices() {
-        // Tracks the battery level.  Requires LightService.
-        mSystemServiceManager.startService(BatteryService.class);
+```java
+/**
+ * Starts some essential services that are not tangled up in the bootstrap process.
+ */
+ private void startCoreServices() {
+    // Tracks the battery level.  Requires LightService.
+    mSystemServiceManager.startService(BatteryService.class);
 
-        // Tracks application usage stats.
-        mSystemServiceManager.startService(UsageStatsService.class);
-        mActivityManagerService.setUsageStatsManager(
-                LocalServices.getService(UsageStatsManagerInternal.class));
+    // Tracks application usage stats.
+    mSystemServiceManager.startService(UsageStatsService.class);
+    mActivityManagerService.setUsageStatsManager(
+            LocalServices.getService(UsageStatsManagerInternal.class));
 
-        // Tracks whether the updatable WebView is in a ready state and watches for update installs.
-        mWebViewUpdateService = mSystemServiceManager.startService(WebViewUpdateService.class);
-    }
+    // Tracks whether the updatable WebView is in a ready state and watches for update installs.
+    mWebViewUpdateService = mSystemServiceManager.startService(WebViewUpdateService.class);
+ }
 ```
 #### startOtherServices()：其他服务
 &ensp;&ensp; **startOtherServices()**这部分源码超多，估计得有个1000来行吧，为了让展示更容易看，去掉了一些简单的启动服务代码，去掉了其中的try-catch结构，内部的try-catch大部分都是抛出之后打印信息。
-```
-    private void startOtherServices() {
+```java
+private void startOtherServices() {
         final Context context = mSystemContext;
         //声明各种服务，但没有实例化
         VibratorService vibrator = null;

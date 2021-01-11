@@ -23,7 +23,7 @@ ndk的版本不要使用15，可以去网上下一个14的版本，否则可能�
 ndk r14下载地址：[https://developer.android.google.cn/ndk/downloads/index.htm](https://developer.android.google.cn/ndk/downloads/index.html)
 ## 第二步 进行源码的下拉
 - 在终端内输入以下命令：
-```
+```shell
 git clone https://github.com/Bilibili/ijkplayer.git ijkplayer-android
 cd ijkplayer-android
 git checkout -B latest k0.8.4
@@ -32,7 +32,7 @@ git checkout -B latest k0.8.4
 
 ## 第三步 修改编译ffmpeg用的脚本文件
 - 删除默认的脚本文件，复制module-default.sh脚本文件，将复制副本更改为默认脚本文件名module.sh
-```
+```shell
 cd config
 rm module.sh
 ln -s module-default.sh module.sh
@@ -41,7 +41,7 @@ cd ..
 
 ## 第四步 编译源码
 
-```
+```shell
 cd android/contrib
 ./compile-ffmpeg.sh clean
 ./compile-ffmpeg.sh all
@@ -82,25 +82,25 @@ APP_PLATFORM := android-14。
 ![](http://upload-images.jianshu.io/upload_images/4273129-cf93e742fe67dfae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 - 然后在build.gradle文件中添加
 
-```
+```gradle
 android{
-...
-sourceSets {
-main {
-jniLibs.srcDirs = ['libs']
-}
-}
+    ...
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+            }
 }
 repositories {
-mavenCentral()
-flatDir {
-dirs 'libs'
-}
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+        }
 }
 dependencies {
-...
-compile(name: 'ijkplayer-java-release', ext: 'aar')
-...
+    ...
+    compile(name: 'ijkplayer-java-release', ext: 'aar')
+    ...
 }
 ```
 

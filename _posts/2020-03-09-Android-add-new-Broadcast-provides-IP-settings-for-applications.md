@@ -10,14 +10,14 @@ tags:
 ---
 
 # 系统中新增静态ip设置
-    本文主要目的是开发提供给应用开发使用修改连接Wifi或以太网时的静态ip设置，采用广播的方式控制，在Setting是内同实现时仿照Settings应用内部的修改方式实现。  
+本文主要目的是开发提供给应用开发使用修改连接Wifi或以太网时的静态ip设置，采用广播的方式控制，在Setting是内同实现时仿照Settings应用内部的修改方式实现。  
     新增两个广播：  
     1.com.cyh.wifi_static_ip：wifi静态ip设置广播
     2.com.cyh.eth_static_ip：以太网静态ip设置广播
     在Settings内新增一个广播接收NetworkStaticReceiver.java
 ## AndroidManifest.xml 
 在**AndroidManifest.xml**文件内添加上我们新增的**NetworkStaticReceiver**和相关广播
-```
+```xml
  <receiver android:name="NetworkStaticReceiver">
             <intent-filter android:priority="1000">
                 <action android:name="com.cyh.wifi_static_ip"/>
@@ -28,7 +28,7 @@ tags:
 之后来看**NetworkStaticReceiver.java**文件的内容
 ## NetworkStaticReceiver.java
 路径：packages/apps/Settings/src/com/android/settings/NetworkStaticReceiver.java，只发逻辑部分，省略了import部分。
-```
+```java
 public class NetworkStaticReceiver extends BroadcastReceiver{
      private final String WIFI_STATIC_IP = "com.cyh.wifi_static_ip";
      private final String ETH_STATIC_IP = "com.cyh.eth_static_ip";
@@ -214,7 +214,7 @@ public class NetworkStaticReceiver extends BroadcastReceiver{
 - 通过**EthernetManager**保存配置项;
 
 ## 应用内控制方法
-```
+```java
   /**
      * 控制Wi-Fi的状态
      * @param isStatic true为STATIC模式，false为DNCP模式。只有TRUE时之后的配置项才有效，false时后面的参数设置null即可

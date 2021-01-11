@@ -19,7 +19,7 @@ JAVA有几种常用的数据结构，主要是继承**Collection**和**Map**这�
 ## HashMap(以下源码基于JAVA8，与JAVA7有较大差别)
 **HashMap**继承**Map**接口，实现一个key-value映射的哈希表。是非同步的，同时允许n**ull value**和**null key**。
 **HashMap**的父类接口，以及内部有几个主要的变量，如下：
-```
+```java
 public class HashMap<K,V> extends AbstractMap<K,V>
     implements Map<K,V>, Cloneable, Serializable 
 
@@ -47,7 +47,7 @@ int threshold;
 final float loadFactor;
 ```
 **Node**:**HashMap**的数据基类
-```
+```java
 static class Node<K,V> implements Map.Entry<K,V> {
         //hash值
         final int hash;
@@ -99,7 +99,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 
 *红黑树是一种易于增删改查的二叉树，他对与数据的查询的时间复杂度是O(logn)，所以利用红黑树的特点就可以更高效的对 HashMap 中的元素进行操作。*
 #### 构造方法
-```
+```java
     public HashMap() {
         this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
     }
@@ -337,7 +337,7 @@ static class Node<K,V> implements Map.Entry<K,V> {
 接下来来看一些常用的方法
 #### put(K,V)
 **put(K,V)**:推入指定的键值对的映射。如果该映射先前包含了该键的映射，则旧值将被替换。
-```
+```java
 public V put(K key, V value) {
         return putVal(hash(key), key, value, false, true);
     }
@@ -345,7 +345,7 @@ public V put(K key, V value) {
 ```
 #### remove(Object)
 **remove(Object)**:从该映射中移除指定键的映射(如果存在)。
-```
+```java
 public V remove(Object key) {
         Node<K,V> e;
         return (e = removeNode(hash(key), key, null, false, true)) == null ?
@@ -404,7 +404,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 ```
 #### get(Object)
 **get(Object)**:返回指定键映射到的值，如果该映射不包含该键的映射，则返回null。
-```
+```java
  public V get(Object key) {
         Node<K,V> e;
         return (e = getNode(hash(key), key)) == null ? null : e.value;
@@ -435,7 +435,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 ```
 #### putAll(Map<? extends K, ? extends V>)
 **putAll(Map<? extends K, ? extends V>)**:将指定Map的所有键值对映射复制到此映射Map。这些映射将替换该映射对指定映射中对应存在的键值对映射。
-```
+```java
  public void putAll(Map<? extends K, ? extends V> m) {
         putMapEntries(m, true);
     }
@@ -443,7 +443,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 ```
 #### clear()
 **clear()**:清空**HashMap**中的所有键值对映射；
-```
+```java
  public void clear() {
         Node<K,V>[] tab;
         modCount++;
@@ -458,7 +458,7 @@ final Node<K,V> removeNode(int hash, Object key, Object value,
 ## HashTable
 **Hashtable**继承**Map**接口，实现一个key-value映射的哈希表。任何非空（**non-null**）的对象都可作为key或者value。
 **HashTable**的父类接口，以及内部有几个主要的变量，如下：
-```
+```java
 public class Hashtable<K,V>
     extends Dictionary<K,V>
     implements Map<K,V>, Cloneable, java.io.Serializable
@@ -479,7 +479,7 @@ private float loadFactor;
 private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 ```
 **HashtableEntry**:HashTable的数据基类
-```
+```java
  private static class HashtableEntry<K,V> implements Map.Entry<K,V> {
     // END Android-changed: Renamed Entry -> HashtableEntry.
         final int hash;
@@ -539,7 +539,7 @@ private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 ```
 **HashTable**与**HashMap**非常相似，有很多作用一样的变量。
 #### 构造方法
-```
+```java
  //构造一个新的Hashtable，具有默认的初始容量(11)和加载系数(0.75)。
  public Hashtable() {
         this(11, 0.75f);
@@ -668,7 +668,7 @@ private void addEntry(int hash, K key, V value, int index) {
 可以看出其实**HashTable**与**HashMap**的初始化类似，在初始化时是不会初始化我们的数据表**table**，只会初始化一些容量大小和负载因子的值，在第一次使用时才会创建。例如**putAll**。
 #### put(K,V)
 **put(K,V)**:推入指定的键值对的映射。如果该映射先前包含了该键的映射，则旧值将被替换。**key**和**value**都不能为null。
-```
+```java
  public synchronized V put(K key, V value) {
         //确保valu不为null
         if (value == null) {
@@ -727,7 +727,7 @@ private void addEntry(int hash, K key, V value, int index) {
 ```
 #### get(Object)
 **get(Object)**:返回指定**key**对应的**value**,若**key**不在**HashTable**中，则返回**null**
-```
+```java
  public synchronized V get(Object key) {
         //计算下标
         HashtableEntry<?,?> tab[] = table;
@@ -744,7 +744,7 @@ private void addEntry(int hash, K key, V value, int index) {
 ```
 #### clear()
 **clear()**:清空此**HashTable**
-```
+```java
   public synchronized void clear() {
         HashtableEntry<?,?> tab[] = table;
         modCount++;
@@ -765,8 +765,7 @@ private void addEntry(int hash, K key, V value, int index) {
 
 方法内容对比：
 **HashTable**
-```
-  
+```java
   public synchronized boolean contains(Object value) {
         //value不能为null
         if (value == null) {
@@ -803,7 +802,7 @@ private void addEntry(int hash, K key, V value, int index) {
     }
 ```
 **HashMap**
-```
+```java
  public boolean containsValue(Object value) {
         Node<K,V>[] tab; V v;
         if ((tab = table) != null && size > 0) {

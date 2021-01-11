@@ -19,7 +19,7 @@ http://h264.code-shop.com/download/nginx_mod_h264_streaming-2.2.7.tar.gz
 
 ## 第二步 配置nginx
 进入文件夹nginx文件夹内，执行配置命令
-```
+```bash
 cd nginx-1.13.5
 ./configure --add-module=../nginx_mod_h264_streaming-2.2.7 --with-http_flv_module --with-http_mp4_module
 ```
@@ -27,7 +27,7 @@ cd nginx-1.13.5
 
 ## 第三步 编译安装nginx
 ### 编译make
-```
+```bash
 make
 ```
 如果出现以下的错误，我们直接找到对应的文件进行修改：
@@ -52,12 +52,12 @@ make
 之后如果还有这种类型的错，采用同样的方基本都能解决了
 
 ### 安装install
-```
+```bash
 make install
 ```
 此时可能出现"Permission denied" 权限问题
 那我们就加上sudo命令再执行
-```
+```bash
 sudo make install
 ```
 
@@ -67,7 +67,7 @@ sudo make install
 ### 第四步 配置nginx.conf
 nginx.conf文件在nginx目录下的conf文件夹下(即“usr/local/nginx/conf”)，
 我们需要修改nginx.conf（直接修改需要权限，同样通过sudo命令开启vi编辑器进行修改）
-```
+```bash
 cd /
 cd usr/local/nginx/conf
 sudo vi  nginx.conf
@@ -97,7 +97,7 @@ flv;
 ```
 ### 第五步 启动nginx
 我们设定的视频读取路径是 "usr/local/nginx/movie"，将1.mp4视频文件放入该文件夹，启动nginx(nginx启动文件放在nginx下的sbin文件夹内)
-```
+```bash
 cd /
 cd usr/local/nginx/sbin
 sudo ./nginx

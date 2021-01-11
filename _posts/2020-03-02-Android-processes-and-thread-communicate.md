@@ -89,7 +89,7 @@ AIDL接口中支持方法，不支持声明的静态常量，这一点有别于�
 **RemoteCallbackList**是系统专门提供的用于删除跨进程listener的接口，它的内部有一个Map结构，专门用来保存所有的AIDL回调，Map的key是**IBinder**类型，value是**Callback**类型。
 
 使用示例：
-```
+```java
 private RemouteCallbackList<ITestListener> = mListenerList = 
     new RemoteCallbackList<ItestListener>();
     
@@ -109,7 +109,7 @@ mListenerList.finishBroadcast();
 
 Binder可能会意外停止，往往是由于服务端进程意外停止了，这时需要重连服务，有两种方式：
 - 1、给Binder设置**DeathRecipient**监听，当Binder死亡时，会收到BinderDied方法的回调
-```
+```java
 private IBinder.DeathRecipient mDeathRecipient = 
         new IBinder.DeatgRecipient(){
             @Overwide
@@ -126,7 +126,7 @@ private IBinder.DeathRecipient mDeathRecipient =
         }
 ```
 在客户端绑定远程服务后，给Binder设置死亡代理
-```
+```java
 mService = ITestManager.Stub.asInterface(binder);
 binder.linkToDeath(mDeathRecipient,0);
 ```
@@ -136,18 +136,18 @@ binder.linkToDeath(mDeathRecipient,0);
 在AIDL中加入**权限验证**功能  
 有两种常用方法：  
 - 1、在onBind中进行验证，验证不通过直接返回null,这样验证失败的客户端无法绑定服务。验证方法有很多种，比如使用**premission**验证：首先在AndroidManifest中声明所需权限：
-```
+```xml
 <permission
     android:name = "com.cyh.test.ACCESS_SERVICE"
     android:procetionLevel="normal"/>
 ```
 内部的应用绑定到我们的服务同样在AndroidManifest中加入
-```
+```xml
 <user-permission 
     android:name = "com.cyh.test.ACCESS_SERVICE"/>
 ```
 之后在Service类中
-```
+```java
 TestManagerService.onBind:
 public IBinder onBind(Intent intent){
     int check = checkCallingOrSelfPermission("com.cyh.test.ACCESS_SERVICE");
@@ -158,7 +158,7 @@ public IBinder onBind(Intent intent){
 }
 ```  
 - 2、可以在服务端的onTransact方法中进行验证，验证失败则直接返回false，这样服务端会中指进行AIDL中的方法，从而达到保护服务器的效果。验证方法同样有很多，可以采用与1类型的permission验证。还可以采用Uid和Pid验证，通过**getCallingUid**和**getCallingPid**可以拿到客户端所属应用的**Pid**和**Uid**，通过这两个参数可以做一些验证工作,比如验证包名：
-```
+```java
 //包名验证如下：
 String packageName = null;
 String[] packages = getPackageManger().getPackagesForUid(getCallingUid());
