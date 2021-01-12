@@ -3,6 +3,7 @@ layout: post
 title:  "JAVA数据结构内部及基础方法实现二（Collection）"
 author: "陈宇瀚"
 date:   2020-12-30 16:35:00 +0800
+header-img: "img/img-head/img-head-java.jpg"
 categories: article
 tags:
   - JAVA 

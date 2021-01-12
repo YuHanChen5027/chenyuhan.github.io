@@ -4,6 +4,7 @@ title:  "Android开机流程启动的系统服务以及功能介绍列表"
 author: "陈宇瀚"
 date:   2021-01-11 17:59:00 +0800
 categories: article
+header-img: "img/img-head/img-head-boot-process.jpg"
 tags:
   - Android
   - Service

@@ -3,6 +3,7 @@ layout: post
 title:  "Android开机启动流程分析二(System进程)"
 author: "陈宇瀚"
 date:   2021-01-08 15:23:02 +0800
+header-img: "img/img-head/img-head-boot-process.jpg"
 categories: article
 tags:
   - Android 
