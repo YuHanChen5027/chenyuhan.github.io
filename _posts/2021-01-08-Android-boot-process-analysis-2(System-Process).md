@@ -12,6 +12,7 @@ tags:
 ---
 &ensp;&ensp; 在**Zygote进程**启动分析那一章种知道在**ZygoteInit.main**方法中，会进行**System进程以及相关服务**的启动，之后就会进入循环等待模式，等待**ActivityMangagerService**创建新应用进程的请求。
 
+&ensp;&ensp; *以下源码基于rk3399_industry Android7.1.2*
 ## ZygoteInit.startSystemServer
 &ensp;&ensp; **startSystemServer**:为**System**服务进程准备参数并从**Zygote**中**fork**出来。源码如下：
 ```java
