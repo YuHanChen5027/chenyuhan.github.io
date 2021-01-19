@@ -62,4 +62,8 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+    <!-- 配置Google Analytics -->
+      {% if jekyll.environment == 'production' and site.google_analytics %}
+      {% include google-analytics.html %}
+      {% endif %}
 </head>
