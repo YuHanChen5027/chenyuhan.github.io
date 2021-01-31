@@ -19,23 +19,25 @@ tags:
 **system/core/init/init.cpp**
 ```cpp
     ....
-    //构造出解析文件用的parser对象
+    //构造出解析文件用的parser（解析器）对象
     Parser& parser = Parser::GetInstance();
     //为一些类型的关键字，创建特定的parser
     parser.AddSectionParser("service",std::make_unique<ServiceParser>());
     parser.AddSectionParser("on", std::make_unique<ActionParser>());
     parser.AddSectionParser("import", std::make_unique<ImportParser>());
     //开始解析init.rc文件
-    //init.rc文件是在init进程启动后执行的启动脚本，文件中记录着init进程需执行的操作。在Android系统中，使用init.rc和init.{ hardware }.rc两个文件。
+    //init.rc文件是在init进程启动后执行的启动脚本，文件中记录着init进程需执行的操作。
+    //在Android系统中，使用init.rc和init.{ hardware }.rc两个文件。
     //init.rc文件在Android系统运行过程中用于通用的环境设置与进程相关的定义
-    //init.{hardware}.rc（例如，高通有init.qcom.rc，MTK有init.mediatek.rc）用于定义Android在不同平台下的特定进程和环境设置等。
+    //init.{hardware}.rc（例如，高通有init.qcom.rc，MTK有init.mediatek.rc）
+    //用于定义Android在不同平台下的特定进程和环境设置等。
     //此处加载的init.rc文件是system/core/rootdir/init.rc，此处记载放在下方解析
     parser.ParseConfig("/init.rc");
     
     ....
 ```
 **system/core/rootdir/init.rc**
-```java
+```rc
 import /init.environ.rc
 import /init.usb.rc
 import /init.${ro.hardware}.rc
@@ -60,7 +62,7 @@ $(call inherit-product, device/rockchip/rk3399/device.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 ```
 
-其中$(SRC_TARGET_DIR)为**build/target**。
+其中$(SRC_TARGET_DIR)为**build/target**,所以对应的文件路径是
 **build/target/product/core_64_bit.mk**
 
 ```
@@ -99,7 +101,7 @@ service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-s
     # writepid <file…> :fork 时将子进程的 pid 写入给定文件。
     writepid /dev/cpuset/foreground/tasks
 
-#与上面类似
+#与上面类似，启动一个32位的zygote进程
 service zygote_secondary /system/bin/app_process32 -Xzygote /system/bin --zygote --socket-name=zygote_secondary
     class main
     socket zygote_secondary stream 660 root system
@@ -114,8 +116,9 @@ service zygote_secondary /system/bin/app_process32 -Xzygote /system/bin --zygote
 #选项
 #选项
 ```
+&ensp;&ensp; **init.zygote64_32.rc**内部启动了两个 zygote 进程 (一个为64位的进程 **zygote** 和32位的进程**zygote_secondary**)，对应的执行程序分别是 **app_process64** (主模式)和**app_process32**。
 ## app_process的执行
-&ensp;&ensp; 接下来分析**zygote64**的可执行程序**/system/bin/app_process64**文件，**app_process64**由**frameworks/base/cmds/app_process**生成，**app_process64**的执行入口是目录下的**app_main.cpp**中的**main**函数，就从这里开始分析**Zygote**的启动流程：
+&ensp;&ensp; 接下来分析**zygote64**的可执行程序**/system/bin/app_process64**文件，**app_process64**由**frameworks/base/cmds/app_process**文件夹内部文件生成，**app_process64**的执行入口是目录下的**app_main.cpp**中的**main**函数，就从这里开始分析**Zygote**的启动流程：
 **rameworks/base/cmds/app_process/app_main.cpp**
 ```cpp
 #if defined(__LP64__)
@@ -133,11 +136,11 @@ static const char ZYGOTE_NICE_NAME[] = "zygote";
 int main(int argc, char* const argv[])
 {
     //下方有AppRuntime和 computeArgBlockSize的代码
-    //computeArgBlockSize方法计算并且返回了传入参数的字节数
+    //computeArgBlockSize方法会计算并且返回了传入参数的字节数
     //之后会创建有AppRuntime对象runtime
     AppRuntime runtime(argv[0], computeArgBlockSize(argc, argv));
     // 进程命令行参数
-    // 忽略 argv[0] -Xzygote
+    // 忽略 argv[0] 即-Xzygote
     argc--;
     argv++;
 
@@ -150,10 +153,10 @@ int main(int argc, char* const argv[])
     // --nice-name : 进程名
     // 对于非Zygote模式开始，这些参数后面将跟着启动类名。所有剩余的参数都传递给这个类的main方法。
     // 对于zygote模式开始，所有剩余参数都传递给zygote main函数。
-    // 注意，我们必须复制参数字符串值，因为当我们将nice名称应用到argv0时，我们将重写整个参数块。
     int i;
     for (i = 0; i < argc; i++) {
         if (argv[i][0] != '-') {
+            // argv[1] = “/system/bin”，所以直接就结束循环
             break;
         }
         if (argv[i][1] == '-' && argv[i][2] == 0) {
@@ -170,20 +173,23 @@ int main(int argc, char* const argv[])
     bool application = false;
     String8 niceName;
     String8 className;
-
-    ++i;  // 跳过未使用的“父目录”参数。
+    // 跳过未使用的“父目录（/system/bin）”参数，所以这里需要解析的参数数组为
+    // {--zygote , --start-system-server , --socket-name=zygote}
+    ++i;  
     while (i < argc) {
         const char* arg = argv[i++];
-        if (strcmp(arg, "--zygote") == 0) {//启动zygot模式存在--zygote
+        if (strcmp(arg, "--zygote") == 0) {//是否存在--zygote参数
+            //设置zygot参数为true，代表启动zygote模式
             zygote = true;
             niceName = ZYGOTE_NICE_NAME; //将niceName设置为"zygote"或者"zygote64"
-        } else if (strcmp(arg, "--start-system-server") == 0) {//启动zygot模式存在--start-system-server
+        } else if (strcmp(arg, "--start-system-server") == 0) {
+            //启动zygot模式存在--start-system-server，将startSystemServer设置为true
             startSystemServer = true; 
         } else if (strcmp(arg, "--application") == 0) {//启动zygote模式不存在--application
             application = true;
-        } else if (strncmp(arg, "--nice-name=", 12) == 0) {//{//启动zygot模式不存在--nice-name
+        } else if (strncmp(arg, "--nice-name=", 12) == 0) {//启动zygot模式不存在--nice-name
             niceName.setTo(arg + 12);
-        } else if (strncmp(arg, "--", 2) != 0) {//启动zygot模式时不成立
+        } else if (strncmp(arg, "--", 2) != 0) {//启动zygot模式时不会进入
             className.setTo(arg);
             break;
         } else {
@@ -191,22 +197,31 @@ int main(int argc, char* const argv[])
             break;
         }
     }
-
+  // 启动zygote时，上面运行完对应参数如下:
+  // zygote = true; niceName = ZYGOTE_NICE_NAME;startSystemServer = true; 
+  // application = false; className =null;i=3;
   Vector<String8> args;//该参数接下来要传入AndroidRuntime.start函数
-    if (!className.isEmpty()) { //启动zygote时未进入
-        // 我们没有处于zygote模式，我们需要传递给RuntimeInit的唯一参数是应用程序参数。
+    if (!className.isEmpty()) { //启动zygote时不会进入
+        // 假如我们要启动的不是zygote进程，而是application或tool程序
+        // 我们需要传递给RuntimeInit的唯一参数是应用程序参数。
         // 其余的参数传递给启动类的main()。在使用进程名覆盖它们之前，对它们进行复制。
         args.add(application ? String8("application") : String8("tool"));
         runtime.setClassNameAndArgs(className, argc - i, argv + i);
     } else {
-        //处于zygot模式
+        //启动zygote时
         maybeCreateDalvikCache();//创建/data/dalvik-cache路径,下方会放源码
 
         if (startSystemServer) {
+            // 设置启动系统服务的参数
             args.add(String8("start-system-server"));
         }
 
         char prop[PROP_VALUE_MAX];
+        // 获取到对应的ABI类型
+        // [ro.product.cpu.abilist] : [arm64-v8a, armeabi-v7a, armeabi]
+        // [ro.product.cpu.abilist32] : [armeabi-v7a, armeabi]
+        // [ro.product.cpu.abilist64] : [arm64-v8a]
+        // 根据我们的参数这里获得的是arm64-v8a
         if (property_get(ABI_LIST_PROPERTY, prop, NULL) == 0) {
             LOG_ALWAYS_FATAL("app_process: Unable to determine ABI list from property %s.",
                 ABI_LIST_PROPERTY);
@@ -217,19 +232,20 @@ int main(int argc, char* const argv[])
         abiFlag.append(prop);
         args.add(abiFlag);
 
-        //将所有剩余参数传递给zygote main()方法。
+        // 将所有剩余参数添加到args
+        // 启动zygote时这里argv就剩下“--socket-name=zygote”参数没加入了，添加进args
         for (; i < argc; ++i) {
             args.add(String8(argv[i]));
         }
     }   
-    //启动zygote模式，此时的args的值为
-    //{"start-system-server","--abi-list=ro.product.cpu.abilist64","-Xzygote","/system/bin","--zygote","--start-system-server"}
+    // 继续启动zygote，此时的args的值为
+    //{"start-system-server","--abi-list=ro.product.cpu.abilist64",--socket-name=zygote}
 
-    if (!niceName.isEmpty()) { //启动zygot模式时不成立
+    if (!niceName.isEmpty()) { //启动zygote时不成立
         runtime.setArgv0(niceName.string());
         set_process_name(niceName.string());
     }
-    if (zygote) { //启动zygot模式时成立，调用
+    if (zygote) { // 启动zygot时成立，调用
         runtime.start("com.android.internal.os.ZygoteInit", args, zygote);
     } else if (className) {
         runtime.start("com.android.internal.os.RuntimeInit", args, zygote);
@@ -241,6 +257,7 @@ int main(int argc, char* const argv[])
     }
 }
 
+/************ 下面是内部调用的一些方法的源码，有需要可以看看 ************/
 //这里计算并且返回了传入参数的字节数，这样的目的可以确保传入的四个参数是在一个连续的内存中。
 static size_t computeArgBlockSize(int argc, char* const argv[]) {
     uintptr_t start = reinterpret_cast<uintptr_t>(argv[0]);
@@ -288,7 +305,9 @@ static void maybeCreateDalvikCache() {
     LOG_ALWAYS_FATAL_IF((result < 0),
             "Error changing dalvik-cache permissions : %s", strerror(errno));
 }
-
+```
+&ensp;&ensp; 由上面源码分析可得。由于rc内启动**zygote**时带有参数**--zygote**，所以最后会执行到**runtime.start("com.android.internal.os.ZygoteInit", args, true);**函数, **runtime**为**AppRuntime**类的对象，而**AppRuntime**类继承自**AndroidRuntime**，对应源码如下：
+```cpp
 class AppRuntime : public AndroidRuntime
 {
 public:
@@ -316,9 +335,8 @@ AndroidRuntime::AndroidRuntime(char* argBlockStart, const size_t argBlockLength)
     gCurRuntime = this;
 }
 ```
-&ensp;&ensp; 由上面源码分析可得。由于rc内启动**zygote**时带有参数**--zygote**，所以最后会执行到**runtime.start("com.android.internal.os.ZygoteInit", args, true);**函数，接下来分析这个函数；
+&ensp;&ensp; 在**AppRuntime**类其内部并没有**start**方法，实际调用的是**AndroidRuntime**类的**start**方法，接下来分析这个函数；
 
-&ensp;&ensp; **runtime**为**AppRuntime**，而**AppRuntime**继承自**AndroidRuntime**，**AppRuntime**其内部并没有**start**方法，所以这里其实调用的是**AndroidRuntime**的**start**方法，源码如下：
 **frameworks/base/core/jni/AndroidRuntime.cpp**
 ```cpp
 /*
@@ -328,8 +346,7 @@ AndroidRuntime::AndroidRuntime(char* argBlockStart, const size_t argBlockLength)
  */
 void AndroidRuntime::start(const char* className, const Vector<String8>& options, bool zygote)
 {
-    //此时的options为{"start-system-server","--abi-list=ro.product.cpu.abilist64","-Xzygote",
-    //"/system/bin","--zygote","--socket-name=zygote",--start-system-server"}
+    //此时的options为{"start-system-server","--abi-list=ro.product.cpu.abilist64",--socket-name=zygote}
     static const String8 startSystemServer("start-system-server");
 
     ....
@@ -352,7 +369,7 @@ void AndroidRuntime::start(const char* className, const Vector<String8>& options
     }
     onVmCreated(env);
     /*
-     *注册安卓jni函数。
+     * 注册安卓jni函数。
      */
     if (startReg(env) < 0) {
         ALOGE("Unable to register all android natives\n");
@@ -368,16 +385,16 @@ void AndroidRuntime::start(const char* className, const Vector<String8>& options
 
     stringClass = env->FindClass("java/lang/String");
     assert(stringClass != NULL);
-    //String数组
+    // String数组
     strArray = env->NewObjectArray(options.size() + 1, stringClass, NULL);
     assert(strArray != NULL);
-    //即ZygoteInit类名字符串
+    // 即ZygoteInit类名字符串
     classNameStr = env->NewStringUTF(className);
     assert(classNameStr != NULL);
-    //将类名传入String数组的第0个位置
+    // 将类名传入String数组strArray的第0个位置
     env->SetObjectArrayElement(strArray, 0, classNameStr);
 
-    //循环添加输入的选项
+    // 循环添加输入的参数
     for (size_t i = 0; i < options.size(); ++i) {
         jstring optionsStr = env->NewStringUTF(options.itemAt(i).string());
         assert(optionsStr != NULL);
@@ -589,13 +606,12 @@ static const RegJNIRec gRegJNI[] = {
 
   private static final String SOCKET_NAME_ARG = "--socket-name=";
   
-//此时的argv[]为
-//{"start-system-server","--abi-list=ro.product.cpu.abilist64","-Xzygote","/system/bin","--zygote","--socket-name=zygote","--start-system-server"}
+// 此时的argv[]为
+// {"ZygoteInit","start-system-server","--abi-list=ro.product.cpu.abilist64",--socket-name=zygote}
  public static void main(String argv[]) {
         ....
         try {
-            Trace.traceBegin(Trace.TRACE_TAG_DALVIK, "ZygoteInit");
-            //DDMS:DalvikDebugMonitorServer,Dalvik调试监控服务器
+            // DDMS:DalvikDebugMonitorServer,Dalvik调试监控服务器
             RuntimeInit.enableDdms();//开启DDMS监听，监听DDMS消息
             // Start profiling the zygote initialization.
             SamplingProfilerIntegration.start();//启动性能统计
@@ -607,27 +623,27 @@ static const RegJNIRec gRegJNI[] = {
                 if ("start-system-server".equals(argv[i])) {
                     startSystemServer = true;
                 } else if (argv[i].startsWith(ABI_LIST_ARG)) {
-                    //获得adb类型，此时为ro.product.cpu.abilist64
+                    // 获得adb类型，此时为ro.product.cpu.abilist64
                     abiList = argv[i].substring(ABI_LIST_ARG.length());
                 } else if (argv[i].startsWith(SOCKET_NAME_ARG)) {
-                     //socketName = zygote
+                     // socketName = zygote
                     socketName = argv[i].substring(SOCKET_NAME_ARG.length());
                 } else {
                     throw new RuntimeException("Unknown command line argument: " + argv[i]);
                 }
             }
-            //没有获取到abi
             if (abiList == null) {
+                // 没有获取到abi
                 throw new RuntimeException("No ABI list supplied.");
             }
-            //创建名为zygote的的Server端socket
+            // 创建名为zygote的的Server端socket
             registerZygoteSocket(socketName);
             preload();// 预加载类和资源
             Trace.traceEnd(Trace.TRACE_TAG_DALVIK);
 
             SamplingProfilerIntegration.writeZygoteSnapshot();
 
-            //初始化gc
+            // 初始化gc
             Trace.traceBegin(Trace.TRACE_TAG_DALVIK, "PostZygoteInitGC");
             gcAndFinalize();
             Trace.traceEnd(Trace.TRACE_TAG_DALVIK);
@@ -640,16 +656,17 @@ static const RegJNIRec gRegJNI[] = {
             // Zygote进程卸载根存储空间，不太明白，希望大神赐教
             Zygote.nativeUnmountStorageOnInit();
 
-            // 停止无多线程模式
-            ZygoteHooks.stopZygoteNoThreadCreation();
+            ....
+            
             if (startSystemServer) {
-                startSystemServer(abiList, socketName);//启动system_server
+                // 启动系统服务
+                startSystemServer(abiList, socketName);
             }
 
-            //进入循环等待
-            //等待Activity管理服务ActivityManagerService请求Zygote进程创建新的应用程序进程
+            // 进入循环等待
+            // 等待Activity管理服务ActivityManagerService请求Zygote进程创建新的应用程序进程
             runSelectLoop(abiList);
-
+            
             closeServerSocket();
         } catch (MethodAndArgsCaller caller) {
             caller.run();
