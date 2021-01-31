@@ -10,12 +10,15 @@ tags:
   - System
   - 开机启动流程
 ---
-&ensp;&ensp; 在**Zygote进程**启动分析那一章种知道在**ZygoteInit.main**方法中，会进行**System进程以及相关服务**的启动，之后就会进入循环等待模式，等待**ActivityMangagerService**创建新应用进程的请求。
+&ensp;&ensp; 在[Android开机启动流程分析一Zygote进程](https://yuhanchen5027.github.io/article/2021/01/03/Android-boot-process-analysis-1(Zygote-Process)/)那一章中知道在**ZygoteInit.main**方法中，会调用**ZygoteInit.startSystemServer**进行**System进程以及相关服务**的启动，之后就会进入循环等待模式，等待**ActivityMangagerService**创建新应用进程的请求。接下来从**ZygoteInit.startSystemServer**开始通过源码分析**System**进程和服务的启动流程。
 
 &ensp;&ensp; *以下源码基于rk3399_industry Android7.1.2*
 ## ZygoteInit.startSystemServer
-&ensp;&ensp; **startSystemServer**:为**System**服务进程准备参数并从**Zygote**中**fork**出来。源码如下：
+&ensp;&ensp; **startSystemServer**:为**System**服务进程准备参数，并从**Zygote**中**fork**一个**System进程**出来。源码如下：
 ```java
+// 这里根据不同的系统产生的参数不同 以rk3399_industry Android7.1.2为例
+// adbList = ro.product.cpu.abilist64
+// socketName = “zygote”
 private static boolean startSystemServer(String abiList, String socketName)
             throws MethodAndArgsCaller, RuntimeException {
         long capabilities = posixCapabilitiesAsBits(
@@ -65,16 +68,16 @@ private static boolean startSystemServer(String abiList, String socketName)
         } catch (IllegalArgumentException ex) {
             throw new RuntimeException(ex);
         }
-         /* For child process */
+        /* For child process */
         if (pid == 0) {
-         //当Zygote.forkSystemServer返回0代表目前是在创建的子进程中
+         // 当Zygote.forkSystemServer返回0代表目前是在创建的子进程中
             if (hasSecondZygote(abiList)) {
                 if(isBox){
                     waitForSecondaryZygote(socketName);
                 }
                 Log.d(TAG,"--------call waitForSecondaryZygote,skip this---,abiList= "+abiList);
             }
-            //启动System进程
+            // 启动System进程
             handleSystemServerProcess(parsedArgs);
         }
 
@@ -83,7 +86,7 @@ private static boolean startSystemServer(String abiList, String socketName)
     
     
     /**
-     * fork成功后进行启动System服务的剩余工作
+     * fork成功后进行启动System进程和服务的剩余工作
      */
     private static void handleSystemServerProcess(
             ZygoteConnection.Arguments parsedArgs)
@@ -134,6 +137,9 @@ private static boolean startSystemServer(String abiList, String socketName)
             /*
              * 将其余参数传递给SystemServer。
              */
+            // parsedArgs.remainingArgs 
+            // 表示之前System进程启动参数args[]中不能被Arguments解析的参数
+            // 这里parsedArgs.remainingArgs = {"com.android.server.SystemServer"}
             RuntimeInit.zygoteInit(parsedArgs.targetSdkVersion, parsedArgs.remainingArgs, cl);
         }
     }
@@ -152,7 +158,7 @@ public static final void zygoteInit(int targetSdkVersion, String[] argv, ClassLo
         commonInit();
         //native层的初始化
         nativeZygoteInit();
-        //调用应用程序java层的main 方法
+        //此时argv={"com.android.server.SystemServer"}，该方法内会调用SystemServer的main方法,
         applicationInit(targetSdkVersion, argv, classLoader);
     }
     
@@ -281,22 +287,55 @@ String8 ProcessState::makeBinderThreadName() {
 
         VMRuntime.getRuntime().setTargetHeapUtilization(0.75f);
         VMRuntime.getRuntime().setTargetSdkVersion(targetSdkVersion);
-
+        // 这里的Arguments类与上面的类不是同一个，这个Arguments是RuntimeInit中的一个内部类
         final Arguments args;
         try {
-            //argv内有一个参数是com.android.server.SystemServer
+            // argv = {"com.android.server.SystemServer"}
             args = new Arguments(argv);
         } catch (IllegalArgumentException ex) {
             Slog.e(TAG, ex.getMessage());
             // let the process exit
             return;
         }
-
-        // The end of of the RuntimeInit event (see #zygoteInit).
-        Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
-
+        ....
+        
         // 之后进行SystemServer的启动，将剩余参数传递给SystemServer.main方法
         invokeStaticMain(args.startClass, args.startArgs, classLoader);
+    }
+    
+    static class Arguments {
+        String startClass;
+
+        String[] startArgs;
+        
+        ....
+        Arguments(String args[]) throws IllegalArgumentException {
+            parseArgs(args);
+        }
+
+        ....
+        private void parseArgs(String args[])
+                throws IllegalArgumentException {
+            int curArg = 0;
+            for (; curArg < args.length; curArg++) {
+                String arg = args[curArg];
+
+                if (arg.equals("--")) {
+                    curArg++;
+                    break;
+                } else if (!arg.startsWith("--")) {
+                    break;
+                }
+            }
+
+            if (curArg == args.length) {
+                throw new IllegalArgumentException("Missing classname argument to RuntimeInit!");
+            }
+
+            startClass = args[curArg++];
+            startArgs = new String[args.length - curArg];
+            System.arraycopy(args, curArg, startArgs, 0, startArgs.length);
+        }
     }
     
     /**
@@ -401,7 +440,7 @@ public static class MethodAndArgsCaller extends Exception
 **frameworks/base/services/java/com/android/server/SystemServer.java**
 源码如下：
 ```java
- //可支持的最早时间，即1970年
+// 可支持的最早时间，即1970年
 private static final long EARLIEST_SUPPORTED_TIME = 86400 * 1000;
 public static void main(String[] args) {
         new SystemServer().run();
@@ -494,7 +533,7 @@ public static void main(String[] args) {
     /* frameworks/base/core/java/android/app/ActivityThread.java */
     //ActivityThread.systemMain();
     public static ActivityThread systemMain() {
-        //判断应用内存，对于低内存设备，禁止应用加速
+        // 判断应用内存，对于低内存设备，禁止应用加速
         if (!ActivityManager.isHighEndGfx()) {
             ThreadedRenderer.disable(true);
         } else {
@@ -518,8 +557,9 @@ public static void main(String[] args) {
                     UserHandle.myUserId());
             try {
                 mInstrumentation = new Instrumentation();
-                //创建应用上下文，这里也会调用一次getSystemContext()
-                //该方法内会创建LoadedApk
+                // 创建应用上下文，这里也会调用一次getSystemContext()
+                // 该方法内会创建LoadedApk
+                // getSystemContext().mPackageInfo其实就是“android”
                 ContextImpl context = ContextImpl.createAppContext(
                         this, getSystemContext().mPackageInfo);
                 //创建Application
@@ -550,16 +590,40 @@ public static void main(String[] args) {
     /* frameworks/base/core/java/android/app/ContextImpl.java*/
     //ContextImpl.createSystemContext(this);
     static ContextImpl createSystemContext(ActivityThread mainThread) {
-        //创建LoadedApk对象
+        // 创建LoadedApk对象
         LoadedApk packageInfo = new LoadedApk(mainThread);
-        //创建ContextImpl对象
+        // 创建ContextImpl对象
         ContextImpl context = new ContextImpl(null, mainThread,
                 packageInfo, null, null, 0, null, null, Display.INVALID_DISPLAY);
         context.mResources.updateConfiguration(context.mResourcesManager.getConfiguration(),
                 context.mResourcesManager.getDisplayMetrics());
         return context;
     }
-    
+    /***    
+    LoadedApk(ActivityThread activityThread) {
+    mActivityThread = activityThread;
+    mApplicationInfo = new ApplicationInfo();
+    mApplicationInfo.packageName = "android";
+    mPackageName = "android";
+    mAppDir = null;
+    mResDir = null;
+    mSplitAppDirs = null;
+    mSplitResDirs = null;
+    mOverlayDirs = null;
+    mSharedLibraries = null;
+    mDataDir = null;
+    mDataDirFile = null;
+    mDeviceProtectedDataDirFile = null;
+    mCredentialProtectedDataDirFile = null;
+    mLibDir = null;
+    mBaseClassLoader = null;
+    mSecurityViolation = false;
+    mIncludeCode = true;
+    mRegisterPackage = false;
+    mClassLoader = ClassLoader.getSystemClassLoader();
+    mResources = Resources.getSystem();
+    }   
+    ***/
     /* frameworks/base/core/java/android/app/LoadedApk.java */
     //LoadedApk.createAppContext();
      public Application makeApplication(boolean forceDefaultAppClass,

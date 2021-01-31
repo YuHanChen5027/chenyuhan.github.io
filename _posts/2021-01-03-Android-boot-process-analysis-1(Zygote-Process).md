@@ -156,7 +156,7 @@ int main(int argc, char* const argv[])
     int i;
     for (i = 0; i < argc; i++) {
         if (argv[i][0] != '-') {
-            // argv[1] = “/system/bin”，所以直接就结束循环
+            // argv[0] = “/system/bin”，所以直接就结束循环
             break;
         }
         if (argv[i][1] == '-' && argv[i][2] == 0) {
