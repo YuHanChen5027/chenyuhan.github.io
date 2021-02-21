@@ -1739,6 +1739,3 @@ public abstract class BroadcastReceiver {
 
 [广播相关学习-processNextBroadcast逻辑](https://www.jianshu.com/p/adc4faa000b9?utm_campaign=maleskine&utm_content=note&utm_medium=seo_notes&utm_source=recommendation)
 
-
- <font color='DodgerBlue'>Broadcast(广播)机制</font>
- $\color{DodgerBlue}{Broadcast(广播)机制}$
