@@ -27,7 +27,7 @@ tags:
 ## SystemUI项目搭建
 ### 创建SystemUI项目
 使用AS创建一个包名为com.android.systemui的No Activity项目
-![image](https://note.youdao.com/yws/res/13096/F19FBE6F1D884647A67F3D907EC66A73)
+![image](/img/in_post/systemui_to_as_create_module.png)
 将**SystemUI**目录中**的AndroidManifest.xml**、**Android.mk**文件、**res**、**res-keyguard**和**src**目录下的所有文件移到刚创建的app目录的的src/main/java目录下，移动完目录结构如下：
 * app
   * src
@@ -52,7 +52,7 @@ tags:
 ### 创建Module
 根据SystemUI源代码目录下的**AndroidManifest.xml**文件数量可以看出部分需要创建的Module(library形式的)，我这里需要创建两个：
 
-![image](https://note.youdao.com/yws/res/13128/214B67C109AE4E8CA0957A1C05CAB15F)
+![image](/img/in_post/systemui_to_as_androidmanifest.png)
 
 1. shared:com.android.systemui.shared
 2. plugins:com.android.systemui.plugins
@@ -61,7 +61,7 @@ tags:
 3. settingsLib:com.android.settingslib
 4. car_support:androidx.car
 
-![image](https://note.youdao.com/yws/res/13132/907873F8C6FD410292970AAE6A9FE352)
+![image](/img/in_post/systemui_to_as_folder.png)
 
  1. 删除**Module**中**src**目录下的自动生成的目录（如**test**）
  2. 将**SystemUI/shard**、**SystemUI/plugin**、**SettingsLib**和**car**目录中**的AndroidManifest.xml**和**Android.mk**文件(没有则不用)和**src**目录下的所有文件移到对应**Module**的src/main/java目录下。
@@ -248,7 +248,7 @@ preBuild {
 在源码中找到对应的color值，写入res/values/colors.xml或者dimens.xml中中。
 
 ### Error:Could not resolve all dependencies for configuration ':app:debugRuntimeClasspath'
-![image](https://note.youdao.com/yws/res/13340/FEB7E42C4B2F4590AF3BA793614A80E1)
+![image](/img/in_post/systemui_to_as_error.png)
 gradle版本改成其他版本，我这里Android9.0，从4.1.3改为3.6.0就可以编译通过了。
 ```
 classpath "com.android.tools.build:gradle:4.1.3"
