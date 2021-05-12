@@ -3,7 +3,7 @@ layout: post
 title:  "将SystemUI导入AS编译运行"
 author: "陈宇瀚"
 date:   2021-05-06 19:31:00 +0800
-header-img: "img/img-head/img-head-boot-process"
+header-img: "img/img-head/img-head-boot-process.jpg"
 categories: article
 tags:
   - Android
@@ -326,7 +326,8 @@ systemUI和module shared包内部有aidl文件，在src/main下创建aidl文件�
       * java
 
 
-### 找不到符号：Thread.setUncaughtExceptionPreHandler(uncaughtExceptionHandler)/Thread.getUncaughtExceptionPreHandler()
+### 找不到符号：Thread.getUncaughtExceptionPreHandler
+找不到符号：Thread.setUncaughtExceptionPreHandler(uncaughtExceptionHandler)/Thread.getUncaughtExceptionPreHandler()
 ```
 Thread.getUncaughtExceptionPreHandler() -> Thread.getDefaultUncaughtExceptionHandler()
 Thread.setUncaughtExceptionPreHandler -> Thread.setDefaultUncaughtExceptionHandler
