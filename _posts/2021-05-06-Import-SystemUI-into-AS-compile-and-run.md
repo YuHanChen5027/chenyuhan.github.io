@@ -3,7 +3,7 @@ layout: post
 title:  "将SystemUI导入AS编译运行"
 author: "陈宇瀚"
 date:   2021-05-06 19:31:00 +0800
-header-img: "img/img-head/tag-bg.jpg"
+header-img: "img/img-head/img-head-boot-process"
 categories: article
 tags:
   - Android
@@ -11,8 +11,6 @@ tags:
   - 源码编译
 ---
 # 将SystemUI导入AS编译运行
-
-[TOC]
 
 ## 前期准备
 **以Android9.0源码（我这里用的是MT2712，win10环境，AS 4.1.3）为例**

@@ -10,7 +10,6 @@ tags:
   - SystemUI
   - StatusBar
 ---
-[toc]
 # SystemUI-StatusBar启动过程简单分析
 ## SystemUI的启动
 SystemUI本质上是一个app，在系统中对应的源码路径为：
